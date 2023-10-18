@@ -446,7 +446,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelId: 0
   amountToMovePos: 1
-  gear: {fileID: 299432429137335835, guid: 1d8461b33f69f754ca7928afb1099cc1, type: 3}
+  changeableGear: {fileID: 299432429137335835, guid: 1d8461b33f69f754ca7928afb1099cc1, type: 3}
+  unchangeableGear: {fileID: 3352474083688165699, guid: 057a956fa32a5434cb80952edf7b8aba, type: 3}
   mirror: {fileID: 6001729495879458171, guid: 5674c8d6941145243a1b9d2a74155576, type: 3}
   levelParent: {fileID: 1032308803}
 --- !u!4 &673475577

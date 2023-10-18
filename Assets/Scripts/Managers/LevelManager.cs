@@ -10,7 +10,8 @@ public class LevelManager : MonoBehaviour
     public int levelId;
 
     [SerializeField] private float amountToMovePos;
-    [SerializeField] private GameObject gear;
+    [SerializeField] private GameObject changeableGear;
+    [SerializeField] private GameObject unchangeableGear;
     [SerializeField] private GameObject mirror;
     [SerializeField] private GameObject levelParent;
 
@@ -56,14 +57,20 @@ public class LevelManager : MonoBehaviour
                         startingPos.x += amountToMovePos;
                         break;
 
-                    //if 1 then spawn gear and move pos 
+                    //if 1 then spawn changable gear and move pos 
                     case "1":
-                        Instantiate(gear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
+                        Instantiate(changeableGear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
                         startingPos.x += amountToMovePos;
                         break;
 
-                    //if 2 then spawn mirror and move pos 
+                    //if 2 then spawn unchangable gear and move pos 
                     case "2":
+                        Instantiate(unchangeableGear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
+                        startingPos.x += amountToMovePos;
+                        break;
+
+                    //if 3 then spawn mirror and move pos 
+                    case "3":
                         Instantiate(mirror, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
                         startingPos.x += amountToMovePos;
                         break;
