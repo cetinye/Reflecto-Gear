@@ -9,9 +9,10 @@ public class LevelSO : ScriptableObject
     public int rowCount;
     public int columnCount;
     public int unchangeableGearCount;
-
+    public int mirrorXPos;
+    public int mirrorYPos;
 
     [Header("Sprites")]
-    public Sprite selected;
     public Sprite unselected;
+    public Sprite selected;
 }

@@ -69,7 +69,17 @@ public class LevelManager : MonoBehaviour
             //column count
             for (int x = 0; x < level.columnCount; x++)
             {
-                Instantiate(changeableGear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
+                if (x != 0 && x == level.mirrorXPos)
+                {
+                    var mirrorObj = Instantiate(mirror, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
+                    mirrorObj.transform.eulerAngles = new Vector3 (mirrorObj.transform.rotation.x, mirrorObj.transform.rotation.y, 90.0f);
+                }
+
+                if (y != 0 && y == level.mirrorYPos)
+                    Instantiate(mirror, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
+                
+                else
+                    Instantiate(changeableGear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
             }
         }
 
