@@ -539,7 +539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d879023032739584c805ec710f01e8b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelId: 3
+  levelId: 1
   amountToMovePosX: 1
   amountToMovePosY: 1
   changeableGear: {fileID: 1415666132571852624, guid: 485ba3ed51509a5419a63add8edfcf83, type: 3}

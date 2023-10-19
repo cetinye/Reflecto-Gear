@@ -22,6 +22,7 @@ public class LevelManager : MonoBehaviour
     private string[][] levelBase;
     private Vector3 startingPos;
     private Vector2 lastPos;
+    private float cellSize;
 
     // Start is called before the first frame update
     void Start()
@@ -48,8 +49,11 @@ public class LevelManager : MonoBehaviour
 
         startingPos = levelParent.transform.position;
 
-        //scale mirror before spawning
-        //ScaleMirror();
+        //make grid arrangements
+        ArrangeGrid();
+
+        //scale gears colliders before spawning
+        ScaleGearCollider();
 
         //row count
         for (int y = 0; y < levelBase.Length; y++)
@@ -82,8 +86,12 @@ public class LevelManager : MonoBehaviour
             }
         }
         //Debug.Log("rows: " + levelBase.Length.ToString() + " columns: " + levelBase[0].Length.ToString());
+    }
 
-        ArrangeGrid();
+    private void ScaleGearCollider()
+    {
+        changeableGear.GetComponent<CircleCollider2D>().radius = cellSize / 2f;
+        unchangeableGear.GetComponent<CircleCollider2D>().radius = cellSize / 2f;
     }
 
     private void ScaleMirror()
@@ -98,7 +106,7 @@ public class LevelManager : MonoBehaviour
     private void ArrangeGrid()
     {
         //12 is a constant i decided for the alignment
-        float cellSize = (12f - levelBase.Length) / 10f;
+        cellSize = (12f - levelBase.Length) / 10f;
 
         //constraint for not going above 10 row size
         if (cellSize < 0.33f)

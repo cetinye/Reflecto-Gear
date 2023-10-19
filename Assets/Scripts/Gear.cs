@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Image = UnityEngine.UI.Image;
 
 public class Gear : MonoBehaviour, IGear
 {
@@ -27,9 +26,9 @@ public class Gear : MonoBehaviour, IGear
             tapCounter++;
 
             if (tapCounter % 2 == 0)
-                this.GetComponent<SpriteRenderer>().sprite = GameManager.instance.unselected;
+                this.GetComponent<Image>().sprite = GameManager.instance.unselected;
             else
-                this.GetComponent<SpriteRenderer>().sprite = GameManager.instance.selected;
+                this.GetComponent<Image>().sprite = GameManager.instance.selected;
         }
     }
 }
