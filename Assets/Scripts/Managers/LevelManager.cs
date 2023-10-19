@@ -3,14 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Text.RegularExpressions;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.CoreUtils;
+using Random = UnityEngine.Random;
 
 public class LevelManager : MonoBehaviour
 {
     public int levelId;
 
+    [SerializeField] private int numOfUnchangeable;
     [SerializeField] private float amountToMovePosX;
     [SerializeField] private float amountToMovePosY;
     [SerializeField] private GameObject changeableGear;
@@ -86,21 +89,45 @@ public class LevelManager : MonoBehaviour
             }
         }
         //Debug.Log("rows: " + levelBase.Length.ToString() + " columns: " + levelBase[0].Length.ToString());
+
+        RandomizeGears();
+    }
+
+    //private void SpawnGear()
+    //{
+    //    int num = Random.Range(0, 2);
+
+    //    if (num == 1)
+    //        Instantiate(changeableGear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
+    //    else
+    //        Instantiate(unchangeableGear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
+
+    //}
+
+    private void RandomizeGears()
+    {
+        for (int i = 0; i < numOfUnchangeable; i++)
+        {
+            int num = Random.Range(0, levelParent.transform.childCount + 1);
+            GameObject objToCheck = levelParent.transform.GetChild(num).gameObject;
+
+            if (objToCheck.TryGetComponent<IGear>(out IGear iGear) &&
+                objToCheck.GetComponent<Gear>().changable == true)
+            {
+                objToCheck.GetComponent<Gear>().changable = false;
+                objToCheck.GetComponent<Image>().sprite = GameManager.instance.selected;
+            }
+            else
+            {
+                numOfUnchangeable++;
+            }
+        }
     }
 
     private void ScaleGearCollider()
     {
         changeableGear.GetComponent<CircleCollider2D>().radius = cellSize / 2f;
         unchangeableGear.GetComponent<CircleCollider2D>().radius = cellSize / 2f;
-    }
-
-    private void ScaleMirror()
-    {
-        if (levelBase.Length > 5)
-        {
-            float mirrorScale = 0.12f - ((levelBase.Length - 5f) / 10f);
-            mirror.transform.localScale = new Vector3(mirrorScale / 10f, mirror.transform.localScale.y, mirror.transform.localScale.z);
-        }
     }
 
     private void ArrangeGrid()
