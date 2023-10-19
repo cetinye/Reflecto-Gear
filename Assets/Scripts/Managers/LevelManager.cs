@@ -32,7 +32,7 @@ public class LevelManager : MonoBehaviour
     private void GenerateLevel()
     {
         //levelId = PlayerPrefs.GetInt("level");
-        
+
         //full path of the level texts document
         string text = Resources.Load<TextAsset>("LevelTexts/" + levelId).ToString();
         //split by line breaks and spaces
@@ -47,6 +47,9 @@ public class LevelManager : MonoBehaviour
         }
 
         startingPos = levelParent.transform.position;
+
+        //scale mirror before spawning
+        //ScaleMirror();
 
         //row count
         for (int y = 0; y < levelBase.Length; y++)
@@ -79,7 +82,21 @@ public class LevelManager : MonoBehaviour
             }
         }
         //Debug.Log("rows: " + levelBase.Length.ToString() + " columns: " + levelBase[0].Length.ToString());
-        
+
+        ArrangeGrid();
+    }
+
+    private void ScaleMirror()
+    {
+        if (levelBase.Length > 5)
+        {
+            float mirrorScale = 0.12f - ((levelBase.Length - 5f) / 10f);
+            mirror.transform.localScale = new Vector3(mirrorScale / 10f, mirror.transform.localScale.y, mirror.transform.localScale.z);
+        }
+    }
+
+    private void ArrangeGrid()
+    {
         //12 is a constant i decided for the alignment
         float cellSize = (12f - levelBase.Length) / 10f;
 
