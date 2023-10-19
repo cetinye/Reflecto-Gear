@@ -32,6 +32,8 @@ public class LevelManager : MonoBehaviour
     private Vector2 lastPos;
     private float cellSize;
     private GameObject objToCheck;
+    private int mirrorPosY;
+    private int mirrorPosX;
 
     // Start is called before the first frame update
     void Start()
@@ -46,6 +48,9 @@ public class LevelManager : MonoBehaviour
     private void ReadLevelData()
     {
         level = levelList[levelId];
+
+        mirrorPosY = level.mirrorYPos;
+        mirrorPosX = level.mirrorXPos;
     }
 
     private void ChangeGearSprite()
@@ -63,19 +68,25 @@ public class LevelManager : MonoBehaviour
         //scale gears colliders before spawning
         ScaleGearCollider();
 
+        if (level.randomizeMirrorOnX)
+            mirrorPosX = Random.Range(1, level.columnCount);
+
+        if (level.randomizeMirrorOnY)
+            mirrorPosY = Random.Range(1, level.rowCount - 1);
+
         //row count
         for (int y = 0; y < level.rowCount; y++)
         {
             //column count
             for (int x = 0; x < level.columnCount; x++)
             {
-                if (x != 0 && x == level.mirrorXPos)
+                if (x != 0 && x == mirrorPosX)
                 {
                     var mirrorObj = Instantiate(mirror, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
                     mirrorObj.transform.eulerAngles = new Vector3 (mirrorObj.transform.rotation.x, mirrorObj.transform.rotation.y, 90.0f);
                 }
 
-                if (y != 0 && y == level.mirrorYPos)
+                if (y != 0 && y == mirrorPosY)
                     Instantiate(mirror, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
                 
                 else
