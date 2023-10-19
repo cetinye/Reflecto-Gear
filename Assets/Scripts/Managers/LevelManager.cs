@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Tracing;
 using System.Text.RegularExpressions;
 using Unity.Mathematics;
 using UnityEngine;
@@ -11,7 +12,11 @@ using Random = UnityEngine.Random;
 
 public class LevelManager : MonoBehaviour
 {
+    public static LevelManager instance;
+
     public int levelId;
+    public LevelSO level;
+    public List<LevelSO> levelList;
 
     [SerializeField] private int numOfUnchangeable;
     [SerializeField] private float amountToMovePosX;
@@ -26,31 +31,31 @@ public class LevelManager : MonoBehaviour
     private Vector3 startingPos;
     private Vector2 lastPos;
     private float cellSize;
+    private GameObject objToCheck;
 
     // Start is called before the first frame update
     void Start()
     {
+        instance = this;
+
+        ReadLevelData();
+        ChangeGearSprite();
         GenerateLevel();
+    }
+
+    private void ReadLevelData()
+    {
+        level = levelList[levelId];
+    }
+
+    private void ChangeGearSprite()
+    {
+        //change sprite regarding levels choice
+        changeableGear.GetComponent<Image>().sprite = level.unselected;
     }
 
     private void GenerateLevel()
     {
-        //levelId = PlayerPrefs.GetInt("level");
-
-        //full path of the level texts document
-        string text = Resources.Load<TextAsset>("LevelTexts/" + levelId).ToString();
-        //split by line breaks and spaces
-        string[] lines = Regex.Split(text, "\r\n");
-        int rows = lines.Length;
-        levelBase = new string[rows][];
-
-        for (int i = 0; i < lines.Length; i++)
-        {
-            string[] stringsOfLine = Regex.Split(lines[i], " ");
-            levelBase[i] = stringsOfLine;
-        }
-
-        startingPos = levelParent.transform.position;
 
         //make grid arrangements
         ArrangeGrid();
@@ -59,67 +64,39 @@ public class LevelManager : MonoBehaviour
         ScaleGearCollider();
 
         //row count
-        for (int y = 0; y < levelBase.Length; y++)
+        for (int y = 0; y < level.rowCount; y++)
         {
             //column count
-            for (int x = 0; x < levelBase[0].Length; x++)
+            for (int x = 0; x < level.columnCount; x++)
             {
-                switch (levelBase[y][x])
-                {
-                    //if 0 then do nothing and move pos 
-                    case "0":
-                        Instantiate(emptyCell, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
-                        break;
-
-                    //if 1 then spawn changable gear and move pos 
-                    case "1":
-                        Instantiate(changeableGear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
-                        break;
-
-                    //if 2 then spawn unchangable gear and move pos 
-                    case "2":
-                        Instantiate(unchangeableGear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
-                        break;
-
-                    //if 3 then spawn mirror and move pos 
-                    case "3":
-                        Instantiate(mirror, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
-                        break;
-                }
+                Instantiate(changeableGear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
             }
         }
-        //Debug.Log("rows: " + levelBase.Length.ToString() + " columns: " + levelBase[0].Length.ToString());
 
         RandomizeGears();
     }
 
-    //private void SpawnGear()
-    //{
-    //    int num = Random.Range(0, 2);
-
-    //    if (num == 1)
-    //        Instantiate(changeableGear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
-    //    else
-    //        Instantiate(unchangeableGear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
-
-    //}
-
     private void RandomizeGears()
     {
-        for (int i = 0; i < numOfUnchangeable; i++)
+        int counter = level.unchangeableGearCount;
+        for (int i = 0; i < counter; i++)
         {
-            int num = Random.Range(0, levelParent.transform.childCount + 1);
-            GameObject objToCheck = levelParent.transform.GetChild(num).gameObject;
+            int num = Random.Range(0, levelParent.transform.childCount);
 
-            if (objToCheck.TryGetComponent<IGear>(out IGear iGear) &&
-                objToCheck.GetComponent<Gear>().changable == true)
+            if (levelParent.transform.GetChild(num) != null)
             {
-                objToCheck.GetComponent<Gear>().changable = false;
-                objToCheck.GetComponent<Image>().sprite = GameManager.instance.selected;
-            }
-            else
-            {
-                numOfUnchangeable++;
+                objToCheck = levelParent.transform.GetChild(num).gameObject;
+
+                if (objToCheck.TryGetComponent<IGear>(out IGear iGear) &&
+                    objToCheck.GetComponent<Gear>().changable == true)
+                {
+                    objToCheck.GetComponent<Gear>().changable = false;
+                    objToCheck.GetComponent<Image>().sprite = level.selected;
+                }
+                else
+                {
+                    counter++;
+                }
             }
         }
     }
@@ -133,7 +110,7 @@ public class LevelManager : MonoBehaviour
     private void ArrangeGrid()
     {
         //12 is a constant i decided for the alignment
-        cellSize = (12f - levelBase.Length) / 10f;
+        cellSize = (12f - level.rowCount) / 10f;
 
         //constraint for not going above 10 row size
         if (cellSize < 0.33f)
@@ -141,6 +118,6 @@ public class LevelManager : MonoBehaviour
 
         levelParent.GetComponent<GridLayoutGroup>().cellSize = new Vector2(cellSize, cellSize);
         levelParent.GetComponent<GridLayoutGroup>().constraint = GridLayoutGroup.Constraint.FixedRowCount;
-        levelParent.GetComponent<GridLayoutGroup>().constraintCount = levelBase.Length;
+        levelParent.GetComponent<GridLayoutGroup>().constraintCount = level.rowCount;
     }
 }
