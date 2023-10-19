@@ -63,7 +63,11 @@ public class LevelManager : MonoBehaviour
     {
 
         //make grid arrangements
-        ArrangeGrid();
+        if (level.autoFill)
+            ArrangeGrid();
+
+        else
+            ManualArrangeGrid();
 
         //scale gears colliders before spawning
         ScaleGearCollider();
@@ -131,14 +135,23 @@ public class LevelManager : MonoBehaviour
     private void ArrangeGrid()
     {
         //12 is a constant i decided for the alignment
-        cellSize = (12f - level.rowCount) / 10f;
+        cellSize = (10f - level.rowCount) / 10f;
 
         //constraint for not going above 10 row size
-        if (cellSize < 0.33f)
-            cellSize = 0.33f;
+        if (cellSize < 0.28f)
+            cellSize = 0.28f;
 
         levelParent.GetComponent<GridLayoutGroup>().cellSize = new Vector2(cellSize, cellSize);
         levelParent.GetComponent<GridLayoutGroup>().constraint = GridLayoutGroup.Constraint.FixedRowCount;
         levelParent.GetComponent<GridLayoutGroup>().constraintCount = level.rowCount;
+    }
+
+    private void ManualArrangeGrid()
+    {
+        cellSize = level.cellsize;
+
+        levelParent.GetComponent<GridLayoutGroup>().cellSize = new Vector2(cellSize, cellSize);
+        levelParent.GetComponent<GridLayoutGroup>().constraint = level.constraint;
+        levelParent.GetComponent<GridLayoutGroup>().constraintCount = level.constraintCount;
     }
 }
