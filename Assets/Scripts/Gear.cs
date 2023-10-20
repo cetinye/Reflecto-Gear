@@ -4,6 +4,9 @@ using Image = UnityEngine.UI.Image;
 public class Gear : MonoBehaviour, IGear
 {
     public bool changable = true;
+    public int X;
+    public int Y;
+    public bool highlighted = false;
 
     private int tapCounter = 0;
 
@@ -20,6 +23,8 @@ public class Gear : MonoBehaviour, IGear
     }
     public void Tapped()
     {
+        Debug.Log("X: " + X  + ", Y: " + Y);
+
         if (changable) 
         {
             //tap counter for deciding whether highlight the gear or not
@@ -29,6 +34,8 @@ public class Gear : MonoBehaviour, IGear
                 this.GetComponent<Image>().sprite = LevelManager.instance.level.unselected;
             else
                 this.GetComponent<Image>().sprite = LevelManager.instance.level.selected;
+
+            GameManager.instance.CalculateSymmetry(this);
         }
     }
 }

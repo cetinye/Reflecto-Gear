@@ -18,6 +18,9 @@ public class LevelManager : MonoBehaviour
     public LevelSO level;
     public List<LevelSO> levelList;
 
+    public int mirrorPosY;
+    public int mirrorPosX;
+
     [SerializeField] private int numOfUnchangeable;
     [SerializeField] private float amountToMovePosX;
     [SerializeField] private float amountToMovePosY;
@@ -32,8 +35,7 @@ public class LevelManager : MonoBehaviour
     private Vector2 lastPos;
     private float cellSize;
     private GameObject objToCheck;
-    private int mirrorPosY;
-    private int mirrorPosX;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -88,13 +90,23 @@ public class LevelManager : MonoBehaviour
                 {
                     GameObject mirrorObj = Instantiate(mirror, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
                     mirrorObj.transform.eulerAngles = new Vector3 (mirrorObj.transform.rotation.x, mirrorObj.transform.rotation.y, 90.0f);
+                    mirrorObj.GetComponent<Mirror>().X = x;
+                    mirrorObj.GetComponent<Mirror>().Y = y;
                 }
 
                 if (y != 0 && y == mirrorPosY)
-                    Instantiate(mirror, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
+                {
+                    GameObject mirrorObj = Instantiate(mirror, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
+                    mirrorObj.GetComponent<Mirror>().X = x;
+                    mirrorObj.GetComponent<Mirror>().Y = y;
+                }
                 
                 else
-                    Instantiate(changeableGear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
+                {
+                    GameObject tempGear = Instantiate(changeableGear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
+                    tempGear.GetComponent<Gear>().X = x;
+                    tempGear.GetComponent<Gear>().Y = y;
+                }
             }
         }
 
@@ -117,6 +129,7 @@ public class LevelManager : MonoBehaviour
                 {
                     objToCheck.GetComponent<Gear>().changable = false;
                     objToCheck.GetComponent<Image>().sprite = level.selected;
+                    objToCheck.GetComponent<Gear>().highlighted = true;
                 }
                 else
                 {

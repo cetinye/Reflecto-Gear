@@ -624,12 +624,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d879023032739584c805ec710f01e8b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelId: 2
+  levelId: 0
   level: {fileID: 0}
   levelList:
   - {fileID: 11400000, guid: 9cb26564dbf0c3540898cb9db6f00a88, type: 2}
   - {fileID: 11400000, guid: 566490feed644d547bec4e6393f29d9e, type: 2}
   - {fileID: 11400000, guid: 60cc19bec6f77914b981d05ac1478773, type: 2}
+  mirrorPosY: 0
+  mirrorPosX: 0
   numOfUnchangeable: 30
   amountToMovePosX: 1
   amountToMovePosY: 1

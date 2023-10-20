@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1738926887353373014}
   m_Layer: 5
   m_Name: UnchangeableGearImage
-  m_TagString: Untagged
+  m_TagString: Gear
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -91,6 +91,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changable: 0
+  X: 0
+  Y: 0
+  highlighted: 0
 --- !u!58 &1738926887353373014
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -106,4 +109,4 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.175
+  m_Radius: 0.25

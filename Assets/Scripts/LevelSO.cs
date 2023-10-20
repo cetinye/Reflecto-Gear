@@ -10,6 +10,7 @@ public class LevelSO : ScriptableObject
     public int rowCount;
     public int columnCount;
     public int unchangeableGearCount;
+    [Header("Write 0 if random enabled")]
     public int mirrorXPos;
     public int mirrorYPos;
     public bool randomizeMirrorOnX;
