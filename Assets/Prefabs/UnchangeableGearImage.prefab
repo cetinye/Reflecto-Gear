@@ -94,6 +94,8 @@ MonoBehaviour:
   X: 0
   Y: 0
   highlighted: 0
+  endgameFlag: 0
+  isCalculated: 0
 --- !u!58 &1738926887353373014
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -109,4 +111,4 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.25
+  m_Radius: 0.175

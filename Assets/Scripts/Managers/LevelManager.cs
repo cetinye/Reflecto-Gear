@@ -89,12 +89,12 @@ public class LevelManager : MonoBehaviour
                 if (x != 0 && x == mirrorPosX)
                 {
                     GameObject mirrorObj = Instantiate(mirror, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
-                    mirrorObj.transform.eulerAngles = new Vector3 (mirrorObj.transform.rotation.x, mirrorObj.transform.rotation.y, 90.0f);
                     mirrorObj.GetComponent<Mirror>().X = x;
                     mirrorObj.GetComponent<Mirror>().Y = y;
+                    mirrorObj.transform.eulerAngles = new Vector3 (mirrorObj.transform.rotation.x, mirrorObj.transform.rotation.y, 90.0f);
                 }
 
-                if (y != 0 && y == mirrorPosY)
+                else if (y != 0 && y == mirrorPosY)
                 {
                     GameObject mirrorObj = Instantiate(mirror, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
                     mirrorObj.GetComponent<Mirror>().X = x;

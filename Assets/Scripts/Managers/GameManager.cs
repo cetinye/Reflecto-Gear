@@ -32,7 +32,9 @@ public class GameManager : MonoBehaviour
         //mirror is vertical
         if (LevelManager.instance.mirrorPosX != 0)
         {
-
+            int mirrorX = GetXofMirrorOnY(gear.Y);
+            int newX = (mirrorX - gear.X) + mirrorX;
+            Check(newX, gear.Y, mode);
         }
 
         //mirror is horizontal
@@ -60,7 +62,10 @@ public class GameManager : MonoBehaviour
                 else
                 {
                     if (listGear[i].GetComponent<Gear>().changable == true && mode == 'a')
+                    {
+                        Debug.LogError("X: " + x + ", Y: " + y);
                         Debug.LogError("!!!  FALSE  !!!");
+                    }
                     //level failed
                 }
             }
@@ -77,6 +82,11 @@ public class GameManager : MonoBehaviour
 
             //for out of reach gears
             if (listchangableGear[i].GetComponent<Gear>().Y >= LevelManager.instance.level.rowCount - 1)
+            {
+                listchangableGear[i].GetComponent<Gear>().endgameFlag = true;
+            }
+
+            if (listchangableGear[i].GetComponent<Gear>().X >= LevelManager.instance.level.columnCount - 1)
             {
                 listchangableGear[i].GetComponent<Gear>().endgameFlag = true;
             }
@@ -107,7 +117,13 @@ public class GameManager : MonoBehaviour
 
     public void CheckUnreachable(Gear gear)
     {
-        if (gear.Y >= LevelManager.instance.level.rowCount - 1)
+        if (LevelManager.instance.mirrorPosY != 0 && gear.Y >= LevelManager.instance.level.rowCount - 1)
+        {
+            //level failed, tapped on unreachable gear
+            Debug.LogError("FAIL ! Tapped on unreachable gear");
+        }
+
+        if (LevelManager.instance.mirrorPosX != 0 && gear.X >= LevelManager.instance.level.columnCount - 1)
         {
             //level failed, tapped on unreachable gear
             Debug.LogError("FAIL ! Tapped on unreachable gear");
@@ -122,6 +138,19 @@ public class GameManager : MonoBehaviour
         {
             if (listMirror[i].GetComponent<Mirror>().X == x)
                 return listMirror[i].GetComponent<Mirror>().Y;
+        }
+
+        return -1;
+    }
+
+    private int GetXofMirrorOnY(int y)
+    {
+        var listMirror = GameObject.FindGameObjectsWithTag("Mirror");
+
+        for (int i = 0; i < listMirror.Length; i++)
+        {
+            if (listMirror[i].GetComponent<Mirror>().Y == y)
+                return listMirror[i].GetComponent<Mirror>().X;
         }
 
         return -1;
