@@ -117,13 +117,15 @@ public class GameManager : MonoBehaviour
 
     public void CheckUnreachable(Gear gear)
     {
-        if (LevelManager.instance.mirrorPosY != 0 && gear.Y >= LevelManager.instance.level.rowCount - 1)
+        if (LevelManager.instance.mirrorPosY != 0 && gear.Y >= LevelManager.instance.level.rowCount - 1 ||
+            gear.Y < LevelManager.instance.mirrorPosY - ((LevelManager.instance.level.rowCount - 1) - LevelManager.instance.mirrorPosY))
         {
             //level failed, tapped on unreachable gear
             Debug.LogError("FAIL ! Tapped on unreachable gear");
         }
 
-        if (LevelManager.instance.mirrorPosX != 0 && gear.X >= LevelManager.instance.level.columnCount - 1)
+        if (LevelManager.instance.mirrorPosX != 0 && gear.X >= LevelManager.instance.level.columnCount - 1 || 
+            gear.X < LevelManager.instance.mirrorPosX - ((LevelManager.instance.level.columnCount - 1) - LevelManager.instance.mirrorPosX))
         {
             //level failed, tapped on unreachable gear
             Debug.LogError("FAIL ! Tapped on unreachable gear");
