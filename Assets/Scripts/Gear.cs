@@ -7,6 +7,8 @@ public class Gear : MonoBehaviour, IGear
     public int X;
     public int Y;
     public bool highlighted = false;
+    public bool endgameFlag = false;
+    public bool isCalculated = false;
 
     private int tapCounter = 0;
 
@@ -31,11 +33,19 @@ public class Gear : MonoBehaviour, IGear
             tapCounter++;
 
             if (tapCounter % 2 == 0)
+            {
                 this.GetComponent<Image>().sprite = LevelManager.instance.level.unselected;
+                this.highlighted = false;
+            }
             else
+            {
                 this.GetComponent<Image>().sprite = LevelManager.instance.level.selected;
+                this.highlighted = true;
+            }
 
             GameManager.instance.CalculateSymmetry(this);
+            GameManager.instance.CheckAtStart();
+            GameManager.instance.EndLevel();
         }
     }
 }

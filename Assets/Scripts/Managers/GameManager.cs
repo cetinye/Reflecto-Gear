@@ -1,11 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+
+    public int counter = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +22,7 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void CalculateSymmetry(Gear gear)
+    public void CalculateSymmetry(Gear gear, char mode = 'a')
     {
         //mirror is vertical
         if (LevelManager.instance.mirrorPosX != 0)
@@ -32,11 +35,11 @@ public class GameManager : MonoBehaviour
         {
             int mirrorY = GetYofMirrorOnX(gear.X);
             int newY = (mirrorY - gear.Y) + mirrorY;
-            Check(gear.X, newY);
+            Check(gear.X, newY, mode);
         }
     }
 
-    private void Check(int x, int y)
+    private void Check(int x, int y, char mode)
     {
         var listGear = GameObject.FindGameObjectsWithTag("Gear");
 
@@ -46,14 +49,48 @@ public class GameManager : MonoBehaviour
             {
                 if (listGear[i].GetComponent<Gear>().highlighted)
                 {
+                    listGear[i].GetComponent<Gear>().endgameFlag = true;
                     Debug.LogWarning("CORRECT !");
                 }
                 else
                 {
-                    Debug.LogWarning("!!!  FALSE  !!!");
+                    if (listGear[i].GetComponent<Gear>().changable == true && mode == 'a')
+                        Debug.LogError("!!!  FALSE  !!!");
                     //level failed
                 }
             }
+        }
+    }
+
+    public void CheckAtStart()
+    {
+        var listchangableGear = GameObject.FindGameObjectsWithTag("Gear");
+        for (int i = 0; i < listchangableGear.Length; i++)
+        {
+            if (listchangableGear[i].GetComponent<Gear>().changable == false)
+                CalculateSymmetry(listchangableGear[i].GetComponent<Gear>(), 'b');
+        }
+    }
+
+    public void EndLevel()
+    {
+        //int counter = 0;
+        var listchangableGear = GameObject.FindGameObjectsWithTag("Gear");
+
+        for (int i = 0; i < listchangableGear.Length; i++)
+        {
+            if (listchangableGear[i].GetComponent<Gear>().changable == false && 
+                listchangableGear[i].GetComponent<Gear>().endgameFlag == true &&
+                listchangableGear[i].GetComponent<Gear>().isCalculated == false)
+            {
+                listchangableGear[i].GetComponent<Gear>().isCalculated = true;
+                counter++;
+            }
+        }
+
+        if (counter == LevelManager.instance.level.unchangeableGearCount)
+        {
+            Debug.LogWarning("LEVEL COMPLETED");
         }
     }
 
