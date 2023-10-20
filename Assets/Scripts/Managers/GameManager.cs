@@ -22,6 +22,11 @@ public class GameManager : MonoBehaviour
         
     }
 
+    //mode parameter is for disabling level fail when CheckAtStart call this function
+    //default mode is 'a' but when we check at the start we pass 'b' so no level fail
+    //at the start
+    //This check is necessary for detecting unchangable gears that are already spawned
+    //symmetrical to the mirror
     public void CalculateSymmetry(Gear gear, char mode = 'a')
     {
         //mirror is vertical
@@ -69,10 +74,16 @@ public class GameManager : MonoBehaviour
         {
             if (listchangableGear[i].GetComponent<Gear>().changable == false)
                 CalculateSymmetry(listchangableGear[i].GetComponent<Gear>(), 'b');
+
+            //for out of reach gears
+            if (listchangableGear[i].GetComponent<Gear>().Y >= LevelManager.instance.level.rowCount - 1)
+            {
+                listchangableGear[i].GetComponent<Gear>().endgameFlag = true;
+            }
         }
     }
 
-    public void EndLevel()
+    public void CheckLevelComplete()
     {
         //int counter = 0;
         var listchangableGear = GameObject.FindGameObjectsWithTag("Gear");
@@ -91,6 +102,15 @@ public class GameManager : MonoBehaviour
         if (counter == LevelManager.instance.level.unchangeableGearCount)
         {
             Debug.LogWarning("LEVEL COMPLETED");
+        }
+    }
+
+    public void CheckUnreachable(Gear gear)
+    {
+        if (gear.Y >= LevelManager.instance.level.rowCount - 1)
+        {
+            //level failed, tapped on unreachable gear
+            Debug.LogError("FAIL ! Tapped on unreachable gear");
         }
     }
 
