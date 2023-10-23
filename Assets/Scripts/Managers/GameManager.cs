@@ -84,12 +84,14 @@ public class GameManager : MonoBehaviour
                 CalculateSymmetry(listchangableGear[i].GetComponent<Gear>(), 'b');
 
             //out of reach gears
-            if (listchangableGear[i].GetComponent<Gear>().Y >= LevelManager.instance.level.rowCount)
+            if (LevelManager.instance.mirrorPosY != 0 && listchangableGear[i].GetComponent<Gear>().Y >= (LevelManager.instance.mirrorPosY * 2) + 1 ||
+                listchangableGear[i].GetComponent<Gear>().Y < LevelManager.instance.mirrorPosY - ((LevelManager.instance.level.rowCount - 1) - LevelManager.instance.mirrorPosY))
             {
                 listchangableGear[i].GetComponent<Gear>().endgameFlag = true;
             }
 
-            if (listchangableGear[i].GetComponent<Gear>().X >= LevelManager.instance.level.columnCount)
+            if (LevelManager.instance.mirrorPosX != 0 && listchangableGear[i].GetComponent<Gear>().X >= (LevelManager.instance.mirrorPosX * 2) + 1 ||
+                listchangableGear[i].GetComponent<Gear>().X < LevelManager.instance.mirrorPosX - ((LevelManager.instance.level.columnCount - 1) - LevelManager.instance.mirrorPosX))
             {
                 listchangableGear[i].GetComponent<Gear>().endgameFlag = true;
             }
@@ -122,7 +124,7 @@ public class GameManager : MonoBehaviour
     public void CheckUnreachable(Gear gear)
     {
         //mirror horizontal
-        if (LevelManager.instance.mirrorPosY != 0 && gear.Y >= LevelManager.instance.level.rowCount ||
+        if (LevelManager.instance.mirrorPosY != 0 && gear.Y >= (LevelManager.instance.mirrorPosY * 2) + 1 ||
             gear.Y < LevelManager.instance.mirrorPosY - ((LevelManager.instance.level.rowCount - 1) - LevelManager.instance.mirrorPosY))
         {
             //level failed, tapped on unreachable gear
@@ -130,7 +132,7 @@ public class GameManager : MonoBehaviour
         }
 
         //mirror vertical
-        if (LevelManager.instance.mirrorPosX != 0 && gear.X >= LevelManager.instance.level.columnCount || 
+        if (LevelManager.instance.mirrorPosX != 0 && gear.X >= (LevelManager.instance.mirrorPosX * 2) + 1 || 
             gear.X < LevelManager.instance.mirrorPosX - ((LevelManager.instance.level.columnCount - 1) - LevelManager.instance.mirrorPosX))
         {
             //level failed, tapped on unreachable gear
