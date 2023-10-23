@@ -9,17 +9,16 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public int counter = 0;
+    public GameState state = GameState.Idle;
 
     // Start is called before the first frame update
     void Start()
     {
         instance = this;
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        UIManager.instance.UpdateLevelNo();
+
+        state = GameState.Idle;
     }
 
     //mode parameter is for disabling level fail when CheckAtStart call this function
@@ -57,7 +56,7 @@ public class GameManager : MonoBehaviour
                 if (listGear[i].GetComponent<Gear>().highlighted)
                 {
                     listGear[i].GetComponent<Gear>().endgameFlag = true;
-                    Debug.LogWarning("CORRECT !");
+                    //Debug.LogWarning("CORRECT !");
                     
                     if (mode == 'a')
                         break;
@@ -66,10 +65,11 @@ public class GameManager : MonoBehaviour
                 {
                     if (listGear[i].GetComponent<Gear>().changable == true && mode == 'a')
                     {
-                        Debug.LogError("X: " + x + ", Y: " + y);
-                        Debug.LogError("!!!  FALSE  !!!");
+                        //Debug.LogError("X: " + x + ", Y: " + y);
+                        //Debug.LogError("!!!  FALSE  !!!");
+
+                        state = GameState.Failed;
                     }
-                    //level failed
                 }
             }
         }
@@ -100,7 +100,6 @@ public class GameManager : MonoBehaviour
 
     public void CheckLevelComplete()
     {
-        //int counter = 0;
         var listchangableGear = GameObject.FindGameObjectsWithTag("Gear");
 
         for (int i = 0; i < listchangableGear.Length; i++)
@@ -117,7 +116,8 @@ public class GameManager : MonoBehaviour
 
         if (counter == LevelManager.instance.level.unchangeableGearCount)
         {
-            Debug.LogWarning("LEVEL COMPLETED");
+            //Debug.LogWarning("LEVEL COMPLETED");
+            state = GameState.Success;
         }
     }
 
@@ -128,7 +128,8 @@ public class GameManager : MonoBehaviour
             gear.Y < LevelManager.instance.mirrorPosY - ((LevelManager.instance.level.rowCount - 1) - LevelManager.instance.mirrorPosY))
         {
             //level failed, tapped on unreachable gear
-            Debug.LogError("FAIL ! Tapped on unreachable gear");
+            //Debug.LogError("FAIL ! Tapped on unreachable gear");
+            state = GameState.Failed;
         }
 
         //mirror vertical
@@ -136,7 +137,8 @@ public class GameManager : MonoBehaviour
             gear.X < LevelManager.instance.mirrorPosX - ((LevelManager.instance.level.columnCount - 1) - LevelManager.instance.mirrorPosX))
         {
             //level failed, tapped on unreachable gear
-            Debug.LogError("FAIL ! Tapped on unreachable gear");
+            //Debug.LogError("FAIL ! Tapped on unreachable gear");
+            state = GameState.Failed;
         }
     }
 
@@ -164,5 +166,13 @@ public class GameManager : MonoBehaviour
         }
 
         return -1;
+    }
+
+    public enum GameState
+    {
+        Idle,
+        Success,
+        Failed,
+        Playing
     }
 }

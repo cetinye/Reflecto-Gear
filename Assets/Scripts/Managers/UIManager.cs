@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-    public float moveAmount;
-    public GameObject upLid;
-    public GameObject downLid;
-    public GameObject upLidFinalPos;
-    public GameObject downLidFinalPos;
-
+    [SerializeField] private int countdownTime;
+    [SerializeField] private float timeRemaining;
     [SerializeField] private float timeToMove;
+    [SerializeField] private GameObject upLid;
+    [SerializeField] private GameObject downLid;
+    [SerializeField] private GameObject upLidFinalPos;
+    [SerializeField] private GameObject downLidFinalPos;
+    [SerializeField] private TextMeshProUGUI levelNo;
+    [SerializeField] private TextMeshProUGUI countdownText;
+    [SerializeField] private TextMeshProUGUI time;
 
     private float distanceUpLid;
     private float distanceDownLid;
@@ -21,20 +25,28 @@ public class UIManager : MonoBehaviour
     private float newDownPos;
     private bool UplidRoutineRunning = false;
     private bool DownlidRoutineRunning = false;
+    private float minutes;
+    private float seconds;
 
     // Start is called before the first frame update
     void Start()
     {
         instance = this;
 
+        StartCoroutine(StartCountdown());
+
         newUpPos = upLid.transform.localPosition.y;
         newDownPos = downLid.transform.localPosition.y;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
+        UpdateTime();
+    }
 
+    public void UpdateLevelNo()
+    {
+        levelNo.text = (LevelManager.instance.levelId + 1).ToString();
     }
 
     public void UpdateProgressBar()
@@ -64,6 +76,28 @@ public class UIManager : MonoBehaviour
             DownlidRoutineRunning = false;
         }
         StartCoroutine(DownlidLerp());       
+    }
+
+    private void UpdateTime()
+    {
+        //timer continue if game is playing
+        if (timeRemaining > 0 && GameManager.instance.state == GameManager.GameState.Playing)
+        {
+            timeRemaining -= Time.deltaTime;
+        }
+        //stop timer if time ran out
+        else if (timeRemaining <= 0 && GameManager.instance.state == GameManager.GameState.Playing)
+        {
+            GameManager.instance.state = GameManager.GameState.Failed;
+            timeRemaining = 0;
+        }
+
+        //1:59 format
+        //minutes = Mathf.FloorToInt(timeRemaining / 60);
+        //seconds = Mathf.FloorToInt(timeRemaining % 60);
+
+        //make timer in 0:00 format
+        time.text = string.Format("{0:00}", timeRemaining);
     }
 
     IEnumerator UplidLerp()
@@ -96,5 +130,20 @@ public class UIManager : MonoBehaviour
         }
         downLid.transform.localPosition = new Vector3(downLid.transform.localPosition.x, newDownPos, downLid.transform.localPosition.z);
         DownlidRoutineRunning = false;
+    }
+
+    IEnumerator StartCountdown()
+    {
+        while (countdownTime > 0)
+        {
+            countdownText.text = countdownTime.ToString();
+            yield return new WaitForSeconds(1f);
+            countdownTime--;
+        }
+
+        countdownText.text = "GO !";
+        yield return new WaitForSeconds(0.5f);
+        countdownText.gameObject.SetActive(false);
+        GameManager.instance.state = GameManager.GameState.Playing;
     }
 }

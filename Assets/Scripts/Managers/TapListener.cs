@@ -21,7 +21,7 @@ public class TapListener : MonoBehaviour
     private void CheckTap()
     {
         //Checking if user is tapping anywhere on the scene
-        if (Input.GetMouseButtonDown(0))
+        if (GameManager.instance.state == GameManager.GameState.Playing && Input.GetMouseButtonDown(0))
         {
             //if yes, get the position
             var worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);

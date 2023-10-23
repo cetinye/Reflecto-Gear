@@ -42,6 +42,9 @@ public class LevelManager : MonoBehaviour
     {
         instance = this;
 
+        //on default start level index 0
+        levelId = PlayerPrefs.GetInt("level", 0);
+
         ReadLevelData();
         ChangeGearSprite();
         GenerateLevel();
@@ -166,5 +169,15 @@ public class LevelManager : MonoBehaviour
         levelParent.GetComponent<GridLayoutGroup>().cellSize = new Vector2(cellSize, cellSize);
         levelParent.GetComponent<GridLayoutGroup>().constraint = level.constraint;
         levelParent.GetComponent<GridLayoutGroup>().constraintCount = level.constraintCount;
+    }
+
+    public void LoadNextLevel()
+    {
+        levelId++;
+        if (levelId >= levelList.Count)
+        {
+            levelId = 0;
+        }
+        PlayerPrefs.SetInt("level", levelId);
     }
 }
