@@ -19,6 +19,8 @@ public class UIManager : MonoBehaviour
     private bool flag = true;
     private float newUpPos;
     private float newDownPos;
+    private bool UplidRoutineRunning = false;
+    private bool DownlidRoutineRunning = false;
 
     // Start is called before the first frame update
     void Start()
@@ -49,33 +51,50 @@ public class UIManager : MonoBehaviour
         newUpPos += distanceUpLid; 
         newDownPos -= distanceDownLid;
 
+        if (UplidRoutineRunning == true)
+        {
+            StopCoroutine(UplidLerp());
+            UplidRoutineRunning = false;
+        }
         StartCoroutine(UplidLerp());
+
+        if (DownlidRoutineRunning == true)
+        {
+            StopCoroutine(DownlidLerp());
+            DownlidRoutineRunning = false;
+        }
         StartCoroutine(DownlidLerp());       
     }
 
     IEnumerator UplidLerp()
     {
+        UplidRoutineRunning = true;
         float timeElapsed = 0;
-
+        Vector3 startVal = upLid.transform.localPosition;
         while (timeElapsed < timeToMove)
         {
-            upLid.transform.localPosition = new Vector3 (upLid.transform.localPosition.x, Mathf.Lerp(upLid.transform.localPosition.y, newUpPos, timeElapsed / timeToMove), upLid.transform.localPosition.z);
+            //upLid.transform.localPosition = new Vector3 (upLid.transform.localPosition.x, Mathf.Lerp(upLid.transform.localPosition.y, newUpPos, timeElapsed / timeToMove), upLid.transform.localPosition.z);
+            upLid.transform.localPosition = Vector3.Lerp(startVal, new Vector3 (upLid.transform.localPosition.x, newUpPos, upLid.transform.localPosition.z), timeElapsed / timeToMove);
             timeElapsed += Time.deltaTime;
             yield return null;
         }
         upLid.transform.localPosition = new Vector3(upLid.transform.localPosition.x, newUpPos, upLid.transform.localPosition.z);
+        UplidRoutineRunning = false;
     }
 
     IEnumerator DownlidLerp()
     {
+        DownlidRoutineRunning = true;
         float timeElapsed = 0;
-
+        Vector3 startVal = downLid.transform.localPosition;
         while (timeElapsed < timeToMove)
         {
-            downLid.transform.localPosition = new Vector3(downLid.transform.localPosition.x, Mathf.Lerp(downLid.transform.localPosition.y, newDownPos, timeElapsed / timeToMove), downLid.transform.localPosition.z);
+            //downLid.transform.localPosition = new Vector3(downLid.transform.localPosition.x, Mathf.Lerp(downLid.transform.localPosition.y, newDownPos, timeElapsed / timeToMove), downLid.transform.localPosition.z);
+            downLid.transform.localPosition = Vector3.Lerp(startVal, new Vector3(downLid.transform.localPosition.x, newDownPos, downLid.transform.localPosition.z), timeElapsed / timeToMove);
             timeElapsed += Time.deltaTime;
             yield return null;
         }
         downLid.transform.localPosition = new Vector3(downLid.transform.localPosition.x, newDownPos, downLid.transform.localPosition.z);
+        DownlidRoutineRunning = false;
     }
 }

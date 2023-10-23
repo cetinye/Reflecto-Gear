@@ -1048,7 +1048,7 @@ MonoBehaviour:
   downLid: {fileID: 1606958842}
   upLidFinalPos: {fileID: 1746989638}
   downLidFinalPos: {fileID: 1462816891}
-  timeToMove: 2
+  timeToMove: 0.5
 --- !u!4 &1569823497
 Transform:
   m_ObjectHideFlags: 0
