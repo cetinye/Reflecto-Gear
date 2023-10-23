@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -14,6 +15,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject downLid;
     [SerializeField] private GameObject upLidFinalPos;
     [SerializeField] private GameObject downLidFinalPos;
+    [SerializeField] private float timeToOpenLidAtStart;
+    [SerializeField] private Transform upLidOpenPos;
+    [SerializeField] private Transform downLidOpenPos;
+    [SerializeField] private float timeToColor;
+    [SerializeField] private GameObject indicatorCircle;
     [SerializeField] private TextMeshProUGUI levelNo;
     [SerializeField] private TextMeshProUGUI countdownText;
     [SerializeField] private TextMeshProUGUI time;
@@ -51,8 +57,6 @@ public class UIManager : MonoBehaviour
 
     public void UpdateProgressBar()
     {
-        Debug.Log("Update");
-
         if (flag)
         {
             flag = false;
@@ -145,5 +149,73 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         countdownText.gameObject.SetActive(false);
         GameManager.instance.state = GameManager.GameState.Playing;
+        StartCoroutine(OpenLid());
+    }
+
+    IEnumerator OpenLid()
+    {
+        float timeElapsed = 0;
+        Vector3 startValUp = upLid.transform.localPosition;
+        Vector3 startValDown = downLid.transform.localPosition;
+        while (timeElapsed < timeToMove)
+        {
+            upLid.transform.localPosition = Vector3.Lerp(startValUp, upLidOpenPos.localPosition, timeElapsed / timeToOpenLidAtStart);
+            downLid.transform.localPosition = Vector3.Lerp(startValDown, downLidOpenPos.localPosition, timeElapsed / timeToOpenLidAtStart);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        upLid.transform.localPosition = upLidOpenPos.localPosition;
+        downLid.transform.localPosition = downLidOpenPos.localPosition;
+    }
+
+    public void LightRed()
+    {
+        StartCoroutine(TurnRed());
+    }
+
+    public void LightGreen()
+    {
+        StartCoroutine(TurnGreen());
+    }
+
+    IEnumerator TurnRed()
+    {
+        float timeElapsed = 0;
+        Color orgColor = indicatorCircle.GetComponent<Image>().color;
+        while (timeElapsed < timeToMove)
+        {
+            indicatorCircle.GetComponent<Image>().color = Color.Lerp(orgColor, Color.red, timeElapsed / timeToColor);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        indicatorCircle.GetComponent<Image>().color = Color.red;
+        StartCoroutine(TurnWhite());
+    }
+
+    IEnumerator TurnGreen()
+    {
+        float timeElapsed = 0;
+        Color orgColor = indicatorCircle.GetComponent<Image>().color;
+        while (timeElapsed < timeToMove)
+        {
+            indicatorCircle.GetComponent<Image>().color = Color.Lerp(orgColor, Color.green, timeElapsed / timeToColor);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        indicatorCircle.GetComponent<Image>().color = Color.green;
+        StartCoroutine(TurnWhite());
+    }
+
+    IEnumerator TurnWhite()
+    {
+        float timeElapsed = 0;
+        Color orgColor = indicatorCircle.GetComponent<Image>().color;
+        while (timeElapsed < timeToMove)
+        {
+            indicatorCircle.GetComponent<Image>().color = Color.Lerp(orgColor, Color.white, timeElapsed / timeToColor);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        indicatorCircle.GetComponent<Image>().color = Color.white;
     }
 }

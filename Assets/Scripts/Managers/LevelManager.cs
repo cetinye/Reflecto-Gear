@@ -43,7 +43,7 @@ public class LevelManager : MonoBehaviour
         instance = this;
 
         //on default start level index 0
-        levelId = PlayerPrefs.GetInt("level", 0);
+        //levelId = PlayerPrefs.GetInt("level", 0);
 
         ReadLevelData();
         ChangeGearSprite();

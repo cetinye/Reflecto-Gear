@@ -11,7 +11,7 @@ public class Gear : MonoBehaviour, IGear
     public bool isCalculated = false;
 
     private int tapCounter = 0;
-    private bool checkFlag = true;
+    private static bool checkFlag = true;
 
     // Start is called before the first frame update
     void Start()

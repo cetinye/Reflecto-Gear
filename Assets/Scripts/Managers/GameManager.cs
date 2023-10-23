@@ -56,8 +56,9 @@ public class GameManager : MonoBehaviour
                 if (listGear[i].GetComponent<Gear>().highlighted)
                 {
                     listGear[i].GetComponent<Gear>().endgameFlag = true;
-                    //Debug.LogWarning("CORRECT !");
-                    
+                    UIManager.instance.LightGreen();
+                    Debug.LogWarning("CORRECT !");
+
                     if (mode == 'a')
                         break;
                 }
@@ -66,9 +67,8 @@ public class GameManager : MonoBehaviour
                     if (listGear[i].GetComponent<Gear>().changable == true && mode == 'a')
                     {
                         //Debug.LogError("X: " + x + ", Y: " + y);
-                        //Debug.LogError("!!!  FALSE  !!!");
-
-                        state = GameState.Failed;
+                        Debug.LogError("!!!  FALSE  !!!");
+                        UIManager.instance.LightRed();
                     }
                 }
             }
@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour
         {
             //level failed, tapped on unreachable gear
             //Debug.LogError("FAIL ! Tapped on unreachable gear");
-            state = GameState.Failed;
+            UIManager.instance.LightRed();
         }
 
         //mirror vertical
@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
         {
             //level failed, tapped on unreachable gear
             //Debug.LogError("FAIL ! Tapped on unreachable gear");
-            state = GameState.Failed;
+            UIManager.instance.LightRed();
         }
     }
 
