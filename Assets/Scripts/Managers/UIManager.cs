@@ -32,8 +32,7 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        upLid.transform.localPosition = Vector3.Lerp(upLid.transform.localPosition, new Vector3(upLid.transform.localPosition.x, newUpPos, upLid.transform.localPosition.z), timeToMove);
-        downLid.transform.localPosition = Vector3.Lerp(downLid.transform.localPosition, new Vector3(downLid.transform.localPosition.x, newDownPos, downLid.transform.localPosition.z), timeToMove);
+
     }
 
     public void UpdateProgressBar()
@@ -48,9 +47,35 @@ public class UIManager : MonoBehaviour
         }
 
         newUpPos += distanceUpLid; 
-        newDownPos -= distanceDownLid; 
+        newDownPos -= distanceDownLid;
 
-        //upLid.transform.localPosition = new Vector3(upLid.transform.localPosition.x, upLid.transform.localPosition.y + distanceUpLid, upLid.transform.localPosition.z);
-        //downLid.transform.localPosition = new Vector3(downLid.transform.localPosition.x, downLid.transform.localPosition.y - distanceDownLid, downLid.transform.localPosition.z);        
+        StartCoroutine(UplidLerp());
+        StartCoroutine(DownlidLerp());       
+    }
+
+    IEnumerator UplidLerp()
+    {
+        float timeElapsed = 0;
+
+        while (timeElapsed < timeToMove)
+        {
+            upLid.transform.localPosition = new Vector3 (upLid.transform.localPosition.x, Mathf.Lerp(upLid.transform.localPosition.y, newUpPos, timeElapsed / timeToMove), upLid.transform.localPosition.z);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        upLid.transform.localPosition = new Vector3(upLid.transform.localPosition.x, newUpPos, upLid.transform.localPosition.z);
+    }
+
+    IEnumerator DownlidLerp()
+    {
+        float timeElapsed = 0;
+
+        while (timeElapsed < timeToMove)
+        {
+            downLid.transform.localPosition = new Vector3(downLid.transform.localPosition.x, Mathf.Lerp(downLid.transform.localPosition.y, newDownPos, timeElapsed / timeToMove), downLid.transform.localPosition.z);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        downLid.transform.localPosition = new Vector3(downLid.transform.localPosition.x, newDownPos, downLid.transform.localPosition.z);
     }
 }

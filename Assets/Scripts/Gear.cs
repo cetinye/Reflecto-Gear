@@ -44,7 +44,6 @@ public class Gear : MonoBehaviour, IGear
                 this.highlighted = true;
             }
 
-            UIManager.instance.UpdateProgressBar();
             GameManager.instance.CheckUnreachable(this);
             GameManager.instance.CalculateSymmetry(this);
 

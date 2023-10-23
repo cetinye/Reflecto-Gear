@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
             {
                 listchangableGear[i].GetComponent<Gear>().isCalculated = true;
                 counter++;
-                
+                UIManager.instance.UpdateProgressBar();
             }
         }
 
