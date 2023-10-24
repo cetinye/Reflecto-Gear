@@ -401,7 +401,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 59.600006, y: 164.79999}
+  m_AnchoredPosition: {x: 59.600098, y: 164.79999}
   m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &149374873
@@ -1224,7 +1224,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -44.299988, y: -184}
+  m_AnchoredPosition: {x: -44.30005, y: -184}
   m_SizeDelta: {x: 102.34, y: 64.34}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1329157346
@@ -1466,6 +1466,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeToColor: 1
+  updateProgressbarFlag: 1
   countdownTime: 3
   timeRemaining: 120
   timeToMove: 0.5

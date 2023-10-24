@@ -60,12 +60,12 @@ public class UIManager : MonoBehaviour
         if (updateProgressbarFlag)
         {
             updateProgressbarFlag = false;
-            distanceUpLid = (upLidFinalPos.transform.localPosition.y - upLid.transform.localPosition.y) / LevelManager.instance.level.unchangeableGearCount;
-            distanceDownLid = (downLid.transform.localPosition.y - downLidFinalPos.transform.localPosition.y) / LevelManager.instance.level.unchangeableGearCount;
+            distanceUpLid = (upLidFinalPos.transform.localPosition.y - upLidOpenPos.localPosition.y) / LevelManager.instance.level.unchangeableGearCount;
+            distanceDownLid = (downLidOpenPos.localPosition.y - downLidFinalPos.transform.localPosition.y) / LevelManager.instance.level.unchangeableGearCount;
         }
 
-        newUpPos += distanceUpLid; 
-        newDownPos -= distanceDownLid;
+        newUpPos = upLidOpenPos.localPosition.y + (distanceUpLid * GameManager.instance.counter); 
+        newDownPos = downLidOpenPos.localPosition.y - (distanceDownLid * GameManager.instance.counter);
 
         if (UplidRoutineRunning == true)
         {
