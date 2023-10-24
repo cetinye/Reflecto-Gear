@@ -1465,6 +1465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38385a8cf3027d44ba53af507d171eec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeToColor: 1
   countdownTime: 3
   timeRemaining: 120
   timeToMove: 0.5
@@ -1475,7 +1476,6 @@ MonoBehaviour:
   timeToOpenLidAtStart: 1
   upLidOpenPos: {fileID: 750344133}
   downLidOpenPos: {fileID: 1268650851}
-  timeToColor: 1
   indicatorCircle: {fileID: 1219839329}
   levelNo: {fileID: 291139428}
   countdownText: {fileID: 843602698}
