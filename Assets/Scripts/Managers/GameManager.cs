@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     public int counter = 0;
     public GameState state = GameState.Idle;
 
+    private Gear tappedGear;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +30,8 @@ public class GameManager : MonoBehaviour
     //symmetrical to the mirror
     public void CalculateSymmetry(Gear gear, char mode = 'a')
     {
+        tappedGear = gear;
+
         //mirror is vertical
         if (LevelManager.instance.mirrorPosX != 0)
         {
@@ -68,7 +72,11 @@ public class GameManager : MonoBehaviour
                     {
                         //Debug.LogError("X: " + x + ", Y: " + y);
                         Debug.LogError("!!!  FALSE  !!!");
+
                         UIManager.instance.LightRed();
+
+                        //unselect
+                        StartCoroutine(UnselectGear());
                     }
                 }
             }
@@ -129,6 +137,11 @@ public class GameManager : MonoBehaviour
         {
             //level failed, tapped on unreachable gear
             //Debug.LogError("FAIL ! Tapped on unreachable gear");
+
+            //unselect
+            tappedGear = gear;
+            StartCoroutine(UnselectGear());
+
             UIManager.instance.LightRed();
         }
 
@@ -138,6 +151,11 @@ public class GameManager : MonoBehaviour
         {
             //level failed, tapped on unreachable gear
             //Debug.LogError("FAIL ! Tapped on unreachable gear");
+
+            //unselect
+            tappedGear = gear;
+            StartCoroutine(UnselectGear());
+
             UIManager.instance.LightRed();
         }
     }
@@ -166,6 +184,12 @@ public class GameManager : MonoBehaviour
         }
 
         return -1;
+    }
+
+    IEnumerator UnselectGear()
+    {
+        yield return new WaitForSeconds(UIManager.instance.timeToColor);
+        tappedGear.Tapped();
     }
 
     public enum GameState

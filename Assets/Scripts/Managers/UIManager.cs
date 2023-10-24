@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
+    public float timeToColor;
 
     [SerializeField] private int countdownTime;
     [SerializeField] private float timeRemaining;
@@ -18,7 +19,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private float timeToOpenLidAtStart;
     [SerializeField] private Transform upLidOpenPos;
     [SerializeField] private Transform downLidOpenPos;
-    [SerializeField] private float timeToColor;
     [SerializeField] private GameObject indicatorCircle;
     [SerializeField] private TextMeshProUGUI levelNo;
     [SerializeField] private TextMeshProUGUI countdownText;

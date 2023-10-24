@@ -42,18 +42,18 @@ public class Gear : MonoBehaviour, IGear
             {
                 this.GetComponent<Image>().sprite = LevelManager.instance.level.selected;
                 this.highlighted = true;
+
+                GameManager.instance.CheckUnreachable(this);
+                GameManager.instance.CalculateSymmetry(this);
+
+                if (checkFlag)
+                {
+                    checkFlag = false;
+                    GameManager.instance.CheckAtStart();
+                }
+
+                GameManager.instance.CheckLevelComplete();
             }
-
-            GameManager.instance.CheckUnreachable(this);
-            GameManager.instance.CalculateSymmetry(this);
-
-            if (checkFlag)
-            {
-                checkFlag = false;
-                GameManager.instance.CheckAtStart();
-            }
-
-            GameManager.instance.CheckLevelComplete();
         }
     }
 }
