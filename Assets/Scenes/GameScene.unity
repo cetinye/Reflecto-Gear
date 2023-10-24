@@ -822,6 +822,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 60cc19bec6f77914b981d05ac1478773, type: 2}
   mirrorPosY: 0
   mirrorPosX: 0
+  gearSpawnTime: 0.125
   numOfUnchangeable: 30
   amountToMovePosX: 1
   amountToMovePosY: 1

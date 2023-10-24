@@ -148,11 +148,11 @@ public class UIManager : MonoBehaviour
         countdownText.text = "GO !";
         yield return new WaitForSeconds(0.5f);
         countdownText.gameObject.SetActive(false);
-        GameManager.instance.state = GameManager.GameState.Playing;
-        StartCoroutine(OpenLid());
+        //GameManager.instance.state = GameManager.GameState.Playing;
+        StartCoroutine(LevelManager.instance.AnimateLoadLevel());
     }
 
-    IEnumerator OpenLid()
+    public IEnumerator OpenLid()
     {
         float timeElapsed = 0;
         Vector3 startValUp = upLid.transform.localPosition;

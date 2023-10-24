@@ -126,6 +126,7 @@ public class GameManager : MonoBehaviour
         {
             //Debug.LogWarning("LEVEL COMPLETED");
             state = GameState.Success;
+            StartCoroutine(LevelManager.instance.AnimateUnloadLevel());
         }
     }
 

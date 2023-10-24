@@ -21,6 +21,7 @@ public class LevelManager : MonoBehaviour
     public int mirrorPosY;
     public int mirrorPosX;
 
+    [SerializeField] private float gearSpawnTime;
     [SerializeField] private int numOfUnchangeable;
     [SerializeField] private float amountToMovePosX;
     [SerializeField] private float amountToMovePosY;
@@ -35,6 +36,7 @@ public class LevelManager : MonoBehaviour
     private Vector2 lastPos;
     private float cellSize;
     private GameObject objToCheck;
+    private List<GameObject> mirrors = new List<GameObject>();
     
 
     // Start is called before the first frame update
@@ -95,6 +97,8 @@ public class LevelManager : MonoBehaviour
                     mirrorObj.GetComponent<Mirror>().X = x;
                     mirrorObj.GetComponent<Mirror>().Y = y;
                     mirrorObj.transform.eulerAngles = new Vector3 (mirrorObj.transform.rotation.x, mirrorObj.transform.rotation.y, 90.0f);
+                    mirrors.Add(mirrorObj);
+                    mirrorObj.SetActive(false);
                 }
 
                 else if (y != 0 && y == mirrorPosY)
@@ -102,6 +106,8 @@ public class LevelManager : MonoBehaviour
                     GameObject mirrorObj = Instantiate(mirror, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
                     mirrorObj.GetComponent<Mirror>().X = x;
                     mirrorObj.GetComponent<Mirror>().Y = y;
+                    mirrors.Add(mirrorObj);
+                    mirrorObj.SetActive(false);
                 }
                 
                 else
@@ -109,6 +115,7 @@ public class LevelManager : MonoBehaviour
                     GameObject tempGear = Instantiate(changeableGear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
                     tempGear.GetComponent<Gear>().X = x;
                     tempGear.GetComponent<Gear>().Y = y;
+                    tempGear.GetComponent<Image>().enabled = false;
                 }
             }
         }
@@ -179,5 +186,49 @@ public class LevelManager : MonoBehaviour
             levelId = 0;
         }
         PlayerPrefs.SetInt("level", levelId);
+    }
+
+    public IEnumerator AnimateLoadLevel()
+    {
+        for (int i = 0; i < levelParent.transform.childCount; i++)
+        {
+            if (!levelParent.transform.GetChild(i).TryGetComponent<Mirror>(out Mirror _mirror))
+            {
+                levelParent.transform.GetChild(i).GetComponent<Image>().enabled = true;
+                yield return new WaitForSeconds(gearSpawnTime);
+            }
+        }
+        StartCoroutine(AnimateMirrors(true));
+        StartCoroutine(UIManager.instance.OpenLid());
+        GameManager.instance.state = GameManager.GameState.Playing;
+    }
+
+    public IEnumerator AnimateUnloadLevel()
+    {
+        GameManager.instance.state = GameManager.GameState.Idle;
+
+        //delay mirror despawning
+        yield return new WaitForSeconds(1f);
+
+        StartCoroutine(AnimateMirrors(false));
+
+        for (int i = levelParent.transform.childCount - 1; i >= 0; i--)
+        {
+            if (!levelParent.transform.GetChild(i).TryGetComponent<Mirror>(out Mirror _mirror))
+            {
+                levelParent.transform.GetChild(i).GetComponent<Image>().enabled = false;
+                yield return new WaitForSeconds(gearSpawnTime);
+            }
+        }
+    }
+
+    IEnumerator AnimateMirrors(bool boolean)
+    {
+        for (int i = 0; i < mirrors.Count; i++)
+        {
+            mirrors[i].SetActive(boolean);
+        }
+
+        yield return null;
     }
 }
