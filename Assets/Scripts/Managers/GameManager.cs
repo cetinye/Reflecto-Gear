@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
         instance = this;
 
         UIManager.instance.UpdateLevelNo();
+        CheckAtStart();
 
         state = GameState.Idle;
     }

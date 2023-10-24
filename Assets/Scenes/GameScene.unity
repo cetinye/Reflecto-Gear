@@ -819,7 +819,6 @@ MonoBehaviour:
   levelList:
   - {fileID: 11400000, guid: 9cb26564dbf0c3540898cb9db6f00a88, type: 2}
   - {fileID: 11400000, guid: 566490feed644d547bec4e6393f29d9e, type: 2}
-  - {fileID: 11400000, guid: 60cc19bec6f77914b981d05ac1478773, type: 2}
   mirrorPosY: 0
   mirrorPosX: 0
   gearSpawnTime: 0.125

@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
     public float timeToColor;
+    public bool updateProgressbarFlag = true;
 
     [SerializeField] private int countdownTime;
     [SerializeField] private float timeRemaining;
@@ -26,7 +27,6 @@ public class UIManager : MonoBehaviour
 
     private float distanceUpLid;
     private float distanceDownLid;
-    private bool flag = true;
     private float newUpPos;
     private float newDownPos;
     private bool UplidRoutineRunning = false;
@@ -57,9 +57,9 @@ public class UIManager : MonoBehaviour
 
     public void UpdateProgressBar()
     {
-        if (flag)
+        if (updateProgressbarFlag)
         {
-            flag = false;
+            updateProgressbarFlag = false;
             distanceUpLid = (upLidFinalPos.transform.localPosition.y - upLid.transform.localPosition.y) / LevelManager.instance.level.unchangeableGearCount;
             distanceDownLid = (downLid.transform.localPosition.y - downLidFinalPos.transform.localPosition.y) / LevelManager.instance.level.unchangeableGearCount;
         }
@@ -154,6 +154,9 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator OpenLid()
     {
+        newUpPos = upLid.transform.localPosition.y;
+        newDownPos = downLid.transform.localPosition.y;
+
         float timeElapsed = 0;
         Vector3 startValUp = upLid.transform.localPosition;
         Vector3 startValDown = downLid.transform.localPosition;

@@ -45,7 +45,7 @@ public class LevelManager : MonoBehaviour
         instance = this;
 
         //on default start level index 0
-        //levelId = PlayerPrefs.GetInt("level", 0);
+        levelId = PlayerPrefs.GetInt("level", 0);
 
         ReadLevelData();
         ChangeGearSprite();
@@ -125,26 +125,18 @@ public class LevelManager : MonoBehaviour
 
     private void RandomizeGears()
     {
-        int counter = level.unchangeableGearCount;
-        for (int i = 0; i < counter; i++)
+        int counter = 0;
+        while (counter < level.unchangeableGearCount)
         {
-            int num = Random.Range(0, levelParent.transform.childCount);
+            int num = Random.Range(0, level.rowCount * level.columnCount);
 
-            if (levelParent.transform.GetChild(num) != null)
+            if (levelParent.transform.GetChild(num).TryGetComponent<IGear>(out IGear iGear) && levelParent.transform.GetChild(num).GetComponent<Gear>().changable == true)
             {
-                objToCheck = levelParent.transform.GetChild(num).gameObject;
+                levelParent.transform.GetChild(num).GetComponent<Gear>().changable = false;
+                levelParent.transform.GetChild(num).GetComponent<Image>().sprite = level.selected;
+                levelParent.transform.GetChild(num).GetComponent<Gear>().highlighted = true;
 
-                if (objToCheck.TryGetComponent<IGear>(out IGear iGear) &&
-                    objToCheck.GetComponent<Gear>().changable == true)
-                {
-                    objToCheck.GetComponent<Gear>().changable = false;
-                    objToCheck.GetComponent<Image>().sprite = level.selected;
-                    objToCheck.GetComponent<Gear>().highlighted = true;
-                }
-                else
-                {
-                    counter++;
-                }
+                counter++;
             }
         }
     }
@@ -178,18 +170,40 @@ public class LevelManager : MonoBehaviour
         levelParent.GetComponent<GridLayoutGroup>().constraintCount = level.constraintCount;
     }
 
-    public void LoadNextLevel()
+    public IEnumerator LoadNextLevel()
     {
+        //Empty all previous level objects
+        for (int i = 0; i < levelParent.transform.childCount; i++)
+        {
+            Destroy(levelParent.transform.GetChild(i).gameObject);
+        }
+        mirrors.Clear();
+        GameManager.instance.counter = 0;
+        UIManager.instance.updateProgressbarFlag = true;
+
+        //increase level index
         levelId++;
         if (levelId >= levelList.Count)
         {
             levelId = 0;
         }
         PlayerPrefs.SetInt("level", levelId);
+
+        //create level
+        ReadLevelData();
+        yield return new WaitForEndOfFrame();
+        ChangeGearSprite();
+        yield return new WaitForEndOfFrame();
+        GenerateLevel();
+        yield return new WaitForEndOfFrame();
+        UIManager.instance.UpdateLevelNo();
+        StartCoroutine(AnimateLoadLevel());
     }
 
     public IEnumerator AnimateLoadLevel()
     {
+        yield return new WaitForSeconds(1f);
+
         for (int i = 0; i < levelParent.transform.childCount; i++)
         {
             if (!levelParent.transform.GetChild(i).TryGetComponent<Mirror>(out Mirror _mirror))
@@ -200,6 +214,7 @@ public class LevelManager : MonoBehaviour
         }
         StartCoroutine(AnimateMirrors(true));
         StartCoroutine(UIManager.instance.OpenLid());
+        GameManager.instance.CheckAtStart();
         GameManager.instance.state = GameManager.GameState.Playing;
     }
 
@@ -220,6 +235,9 @@ public class LevelManager : MonoBehaviour
                 yield return new WaitForSeconds(gearSpawnTime);
             }
         }
+
+        yield return new WaitForEndOfFrame();
+        StartCoroutine(LoadNextLevel());
     }
 
     IEnumerator AnimateMirrors(bool boolean)

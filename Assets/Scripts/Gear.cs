@@ -11,7 +11,6 @@ public class Gear : MonoBehaviour, IGear
     public bool isCalculated = false;
 
     private int tapCounter = 0;
-    private static bool checkFlag = true;
 
     // Start is called before the first frame update
     void Start()
@@ -45,13 +44,6 @@ public class Gear : MonoBehaviour, IGear
 
                 GameManager.instance.CheckUnreachable(this);
                 GameManager.instance.CalculateSymmetry(this);
-
-                if (checkFlag)
-                {
-                    checkFlag = false;
-                    GameManager.instance.CheckAtStart();
-                }
-
                 GameManager.instance.CheckLevelComplete();
             }
         }
