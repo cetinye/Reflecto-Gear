@@ -15,6 +15,7 @@ public class LevelSO : ScriptableObject
     public int mirrorYPos;
     public bool randomizeMirrorOnX;
     public bool randomizeMirrorOnY;
+    public bool Lshape;
 
     [Header("Sprites")]
     public Sprite unselected;

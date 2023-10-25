@@ -732,7 +732,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 72.3, y: -172.59998}
+  m_AnchoredPosition: {x: 72.29999, y: -172.59998}
   m_SizeDelta: {x: 150.7, y: 102.51}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &291139428
@@ -1209,11 +1209,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d879023032739584c805ec710f01e8b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelId: 0
+  levelId: 1
   level: {fileID: 0}
   levelList:
   - {fileID: 11400000, guid: 9cb26564dbf0c3540898cb9db6f00a88, type: 2}
   - {fileID: 11400000, guid: 566490feed644d547bec4e6393f29d9e, type: 2}
+  - {fileID: 11400000, guid: 60cc19bec6f77914b981d05ac1478773, type: 2}
   mirrorPosY: 0
   mirrorPosX: 0
   gearSpawnTime: 0.0625
@@ -2198,6 +2199,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeToColor: 1
   updateProgressbarFlag: 1
+  nextText: {fileID: 1922985383}
   countdownTime: 3
   timeRemaining: 60
   timeToMove: 0.5
@@ -2214,7 +2216,6 @@ MonoBehaviour:
   time: {fileID: 1329157346}
   bottomGearUp: {fileID: 149374873}
   bottomGearDown: {fileID: 966873084}
-  nextText: {fileID: 1922985383}
 --- !u!4 &1569823497
 Transform:
   m_ObjectHideFlags: 0

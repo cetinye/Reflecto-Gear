@@ -46,7 +46,7 @@ public class LevelManager : MonoBehaviour
         instance = this;
 
         //on default start level index 0
-        levelId = PlayerPrefs.GetInt("level", 0);
+        //levelId = PlayerPrefs.GetInt("level", 0);
 
         ReadLevelData();
         ChangeGearSprite();
@@ -69,6 +69,8 @@ public class LevelManager : MonoBehaviour
 
     private void GenerateLevel()
     {
+        int yMax = Mathf.CeilToInt(level.rowCount / 2);
+        int xMax = Mathf.CeilToInt(level.columnCount / 2);
 
         //make grid arrangements
         if (level.autoFill)
@@ -99,7 +101,15 @@ public class LevelManager : MonoBehaviour
                     mirrorObj.GetComponent<Mirror>().Y = y;
                     mirrorObj.transform.eulerAngles = new Vector3 (mirrorObj.transform.rotation.x, mirrorObj.transform.rotation.y, 90.0f);
                     mirrors.Add(mirrorObj);
+                    mirrorObj.gameObject.name = mirrorObj.gameObject.name + " " + x + "," + y;
                     mirrorObj.SetActive(false);
+
+                    if (level.Lshape && mirrorObj.GetComponent<Mirror>().Y > yMax)
+                    {
+                        mirrorObj.GetComponent<Image>().enabled = false;
+                        mirrorObj.GetComponent<Mirror>().X = 99;
+                        mirrorObj.GetComponent<Mirror>().Y = 99;
+                    }
                 }
 
                 else if (y != 0 && y == mirrorPosY)
@@ -108,14 +118,23 @@ public class LevelManager : MonoBehaviour
                     mirrorObj.GetComponent<Mirror>().X = x;
                     mirrorObj.GetComponent<Mirror>().Y = y;
                     mirrors.Add(mirrorObj);
+                    mirrorObj.gameObject.name = mirrorObj.gameObject.name + " "+ x + "," + y;
                     mirrorObj.SetActive(false);
+
+                    if (level.Lshape && mirrorObj.GetComponent<Mirror>().X > xMax)
+                    {
+                        mirrorObj.GetComponent<Image>().enabled = false;
+                        mirrorObj.GetComponent<Mirror>().X = 99;
+                        mirrorObj.GetComponent<Mirror>().Y = 99;
+                    }
                 }
-                
+
                 else
                 {
                     GameObject tempGear = Instantiate(changeableGear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
                     tempGear.GetComponent<Gear>().X = x;
                     tempGear.GetComponent<Gear>().Y = y;
+                    tempGear.gameObject.name = tempGear.gameObject.name + x + " -" + y;
                     tempGear.GetComponent<Image>().enabled = false;
                 }
             }
@@ -200,6 +219,8 @@ public class LevelManager : MonoBehaviour
         UIManager.instance.UpdateLevelNo();
         yield return new WaitForEndOfFrame();
         UIManager.instance.UpdateBottomGearImage();
+        yield return new WaitForEndOfFrame();
+        GameManager.instance.gearCountForCompletion = level.unchangeableGearCount;
         StartCoroutine(AnimateLoadLevel());
     }
 
@@ -218,7 +239,7 @@ public class LevelManager : MonoBehaviour
         UIManager.instance.nextText.GetComponent<TextMeshProUGUI>().enabled = false;
         StartCoroutine(AnimateMirrors(true));
         StartCoroutine(UIManager.instance.OpenLid());
-        GameManager.instance.CheckAtStart();
+        GameManager.instance.CheckOverlappingGears();
         GameManager.instance.state = GameManager.GameState.Playing;
     }
 
