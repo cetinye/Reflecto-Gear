@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
     public float timeToColor;
     public bool updateProgressbarFlag = true;
+    public TextMeshProUGUI nextText;
 
     [SerializeField] private int countdownTime;
     [SerializeField] private float timeRemaining;

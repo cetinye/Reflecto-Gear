@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.Tracing;
 using System.Text.RegularExpressions;
+using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -214,6 +215,7 @@ public class LevelManager : MonoBehaviour
                 yield return new WaitForSeconds(gearSpawnTime);
             }
         }
+        UIManager.instance.nextText.GetComponent<TextMeshProUGUI>().enabled = false;
         StartCoroutine(AnimateMirrors(true));
         StartCoroutine(UIManager.instance.OpenLid());
         GameManager.instance.CheckAtStart();
@@ -223,6 +225,7 @@ public class LevelManager : MonoBehaviour
     public IEnumerator AnimateUnloadLevel()
     {
         GameManager.instance.state = GameManager.GameState.Idle;
+        UIManager.instance.nextText.GetComponent<TextMeshProUGUI>().enabled = true;
 
         //delay mirror despawning
         yield return new WaitForSeconds(1f);
