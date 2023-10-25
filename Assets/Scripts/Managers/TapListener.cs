@@ -28,7 +28,7 @@ public class TapListener : MonoBehaviour
             var touchPos = new Vector2(worldPoint.x, worldPoint.y);
 
             //checking if user tapped on a gear
-            if (Physics2D.OverlapPoint(touchPos) != null &&
+            if (Gear.isTappable && Physics2D.OverlapPoint(touchPos) != null &&
                 Physics2D.OverlapPoint(touchPos).TryGetComponent<IGear>(out IGear iGear))
             {
                 Debug.Log("Tapped on a gear");

@@ -36,6 +36,8 @@ public class UIManager : MonoBehaviour
     private bool DownlidRoutineRunning = false;
     private float minutes;
     private float seconds;
+    private bool isRedFinished = true;
+    private bool isGreenFinished = true;
 
     // Start is called before the first frame update
     void Start()
@@ -182,16 +184,32 @@ public class UIManager : MonoBehaviour
 
     public void LightRed()
     {
-        StartCoroutine(TurnRed());
+        if (isRedFinished)
+            StartCoroutine(TurnRed());
+        else
+        {
+            StopCoroutine(TurnRed());
+            StopCoroutine(TurnWhite());
+            StartCoroutine(TurnRed());
+        }
     }
 
     public void LightGreen()
     {
-        StartCoroutine(TurnGreen());
+        Gear.isTappable = true;
+        if (isGreenFinished)
+            StartCoroutine(TurnGreen());
+        else
+        {
+            StopCoroutine(TurnGreen());
+            StopCoroutine(TurnWhite());
+            StartCoroutine(TurnGreen());
+        }
     }
 
     IEnumerator TurnRed()
     {
+        isRedFinished = false;
         float timeElapsed = 0;
         Color orgColor = indicatorCircle.GetComponent<Image>().color;
         while (timeElapsed < timeToMove)
@@ -206,6 +224,7 @@ public class UIManager : MonoBehaviour
 
     IEnumerator TurnGreen()
     {
+        isGreenFinished = false;
         float timeElapsed = 0;
         Color orgColor = indicatorCircle.GetComponent<Image>().color;
         while (timeElapsed < timeToMove)
@@ -229,5 +248,7 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
         indicatorCircle.GetComponent<Image>().color = Color.white;
+        isRedFinished = true;
+        isGreenFinished = true;
     }
 }

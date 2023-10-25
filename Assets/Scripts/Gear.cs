@@ -3,6 +3,7 @@ using Image = UnityEngine.UI.Image;
 
 public class Gear : MonoBehaviour, IGear
 {
+    public static bool isTappable = true;
     public bool changable = true;
     public int X;
     public int Y;
@@ -36,15 +37,18 @@ public class Gear : MonoBehaviour, IGear
             {
                 this.GetComponent<Image>().sprite = LevelManager.instance.level.unselected;
                 this.highlighted = false;
+
+                isTappable = true;
             }
             else
             {
+                isTappable = false;
+
                 this.GetComponent<Image>().sprite = LevelManager.instance.level.selected;
                 this.highlighted = true;
 
                 GameManager.instance.CheckUnreachable(this);
                 GameManager.instance.CalculateSymmetry(this);
-                
             }
         }
     }
