@@ -44,7 +44,7 @@ public class Gear : MonoBehaviour, IGear
 
                 GameManager.instance.CheckUnreachable(this);
                 GameManager.instance.CalculateSymmetry(this);
-                GameManager.instance.CheckLevelComplete();
+                
             }
         }
     }

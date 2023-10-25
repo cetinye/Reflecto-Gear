@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
         instance = this;
 
         UIManager.instance.UpdateLevelNo();
+        UIManager.instance.UpdateBottomGearImage();
         CheckAtStart();
 
         state = GameState.Idle;
@@ -61,6 +62,7 @@ public class GameManager : MonoBehaviour
                 if (listGear[i].GetComponent<Gear>().highlighted)
                 {
                     listGear[i].GetComponent<Gear>().endgameFlag = true;
+                    GameManager.instance.CheckLevelComplete();
                     UIManager.instance.LightGreen();
                     Debug.LogWarning("CORRECT !");
 

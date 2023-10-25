@@ -19,6 +19,8 @@ public class LevelSO : ScriptableObject
     [Header("Sprites")]
     public Sprite unselected;
     public Sprite selected;
+    public Sprite gearOnBottomUp;
+    public Sprite gearOnBottomDown;
 
     [Header("Grid Variables")]
     public bool autoFill;

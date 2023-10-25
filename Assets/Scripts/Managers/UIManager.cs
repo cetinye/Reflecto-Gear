@@ -24,6 +24,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI levelNo;
     [SerializeField] private TextMeshProUGUI countdownText;
     [SerializeField] private TextMeshProUGUI time;
+    [SerializeField] private Image bottomGearUp;
+    [SerializeField] private Image bottomGearDown;
 
     private float distanceUpLid;
     private float distanceDownLid;
@@ -53,6 +55,12 @@ public class UIManager : MonoBehaviour
     public void UpdateLevelNo()
     {
         levelNo.text = (LevelManager.instance.levelId + 1).ToString();
+    }
+
+    public void UpdateBottomGearImage()
+    {
+        bottomGearDown.sprite = LevelManager.instance.level.gearOnBottomDown;
+        bottomGearUp.sprite = LevelManager.instance.level.gearOnBottomUp;
     }
 
     public void UpdateProgressBar()

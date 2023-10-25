@@ -197,6 +197,8 @@ public class LevelManager : MonoBehaviour
         GenerateLevel();
         yield return new WaitForEndOfFrame();
         UIManager.instance.UpdateLevelNo();
+        yield return new WaitForEndOfFrame();
+        UIManager.instance.UpdateBottomGearImage();
         StartCoroutine(AnimateLoadLevel());
     }
 
