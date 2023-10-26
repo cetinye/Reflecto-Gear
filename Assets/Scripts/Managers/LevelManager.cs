@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 using static GameManager;
 using Random = UnityEngine.Random;
 
@@ -27,11 +28,28 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject emptyCell;
     [SerializeField] private GameObject mirror;
     [SerializeField] private GameObject levelParent;
+    [SerializeField] private VideoPlayer videoPlayer;
+    [SerializeField] private GameObject videoOnCanvas;
 
     private Vector3 startingPos;
     private float cellSize;
     private List<GameObject> mirrors = new List<GameObject>();
-    
+
+    private void Awake()
+    {
+        //Time.timeScale = 0f;
+        GameObject camera = GameObject.Find("Main Camera");
+        videoPlayer.targetCamera = camera.GetComponent<Camera>();
+        videoPlayer.renderMode = UnityEngine.Video.VideoRenderMode.CameraNearPlane;
+        Invoke("EndReached", (float)videoPlayer.clip.length);
+    }
+
+    void EndReached()
+    {
+        Time.timeScale = 1f;
+        videoOnCanvas.SetActive(false);
+        videoPlayer.Stop();
+    }
 
     // Start is called before the first frame update
     void Start()
