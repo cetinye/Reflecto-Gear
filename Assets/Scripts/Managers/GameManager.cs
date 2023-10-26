@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public GameState state = GameState.Idle;
-    public int gearCountForCompletion;
     public List<Gear> AnswerList = new List<Gear>();
 
     private Gear tappedGear;
@@ -23,7 +22,6 @@ public class GameManager : MonoBehaviour
 
         UIManager.instance.UpdateLevelNo();
         UIManager.instance.UpdateBottomGearImage();
-        gearCountForCompletion = LevelManager.instance.level.unchangeableGearCount;
 
         state = GameState.Idle;
     }
@@ -32,11 +30,11 @@ public class GameManager : MonoBehaviour
     {
         if (AnswerList.Contains(gearToCheck))
         {
+            UIManager.instance.UpdateProgressBar();
             AnswerList.Remove(gearToCheck);
             gearToCheck.changable = false;
             CheckLevelComplete();
             UIManager.instance.LightGreen();
-            UIManager.instance.UpdateProgressBar();
             Debug.LogWarning("CORRECT !");
         }
         else

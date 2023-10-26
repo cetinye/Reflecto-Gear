@@ -215,7 +215,7 @@ public class LevelManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         UIManager.instance.UpdateBottomGearImage();
         yield return new WaitForEndOfFrame();
-        GameManager.instance.gearCountForCompletion = level.unchangeableGearCount;
+        UIManager.instance.counterIndicator = 0;
         StartCoroutine(AnimateLoadLevel());
     }
 

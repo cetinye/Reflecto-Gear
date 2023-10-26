@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     public float timeToColor;
     public bool updateProgressbarFlag = true;
     public TextMeshProUGUI nextText;
+    public int counterIndicator = 0;
 
     [SerializeField] private int countdownTime;
     [SerializeField] private float timeRemaining;
@@ -34,11 +35,8 @@ public class UIManager : MonoBehaviour
     private float newDownPos;
     private bool UplidRoutineRunning = false;
     private bool DownlidRoutineRunning = false;
-    private float minutes;
-    private float seconds;
     private bool isRedFinished = true;
     private bool isGreenFinished = true;
-    private int counterIndicator = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -74,8 +72,8 @@ public class UIManager : MonoBehaviour
         if (updateProgressbarFlag)
         {
             updateProgressbarFlag = false;
-            distanceUpLid = (upLidFinalPos.transform.localPosition.y - upLidOpenPos.localPosition.y) / GameManager.instance.AnswerList.Count + 1;
-            distanceDownLid = (downLidOpenPos.localPosition.y - downLidFinalPos.transform.localPosition.y) / GameManager.instance.AnswerList.Count + 1;
+            distanceUpLid = (upLidFinalPos.transform.localPosition.y - upLidOpenPos.localPosition.y) / GameManager.instance.AnswerList.Count;
+            distanceDownLid = (downLidOpenPos.localPosition.y - downLidFinalPos.transform.localPosition.y) / GameManager.instance.AnswerList.Count;
         }
 
         newUpPos = upLidOpenPos.localPosition.y + (distanceUpLid * counterIndicator); 
