@@ -1163,8 +1163,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff1d42e45e5bba149a221bceefe8adf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  counter: 0
   state: 0
+  gearCountForCompletion: 0
+  AnswerList: []
 --- !u!4 &613027674
 Transform:
   m_ObjectHideFlags: 0
@@ -1209,12 +1210,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d879023032739584c805ec710f01e8b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelId: 1
+  levelId: 0
   level: {fileID: 0}
   levelList:
   - {fileID: 11400000, guid: 9cb26564dbf0c3540898cb9db6f00a88, type: 2}
   - {fileID: 11400000, guid: 566490feed644d547bec4e6393f29d9e, type: 2}
-  - {fileID: 11400000, guid: 60cc19bec6f77914b981d05ac1478773, type: 2}
+  - {fileID: 11400000, guid: 2ce168655d82d164686356320bbe9754, type: 2}
   mirrorPosY: 0
   mirrorPosX: 0
   gearSpawnTime: 0.0625

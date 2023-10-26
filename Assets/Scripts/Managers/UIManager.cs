@@ -38,6 +38,7 @@ public class UIManager : MonoBehaviour
     private float seconds;
     private bool isRedFinished = true;
     private bool isGreenFinished = true;
+    private int counterIndicator = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -68,15 +69,17 @@ public class UIManager : MonoBehaviour
 
     public void UpdateProgressBar()
     {
+        counterIndicator++;
+
         if (updateProgressbarFlag)
         {
             updateProgressbarFlag = false;
-            distanceUpLid = (upLidFinalPos.transform.localPosition.y - upLidOpenPos.localPosition.y) / LevelManager.instance.level.unchangeableGearCount;
-            distanceDownLid = (downLidOpenPos.localPosition.y - downLidFinalPos.transform.localPosition.y) / LevelManager.instance.level.unchangeableGearCount;
+            distanceUpLid = (upLidFinalPos.transform.localPosition.y - upLidOpenPos.localPosition.y) / GameManager.instance.AnswerList.Count + 1;
+            distanceDownLid = (downLidOpenPos.localPosition.y - downLidFinalPos.transform.localPosition.y) / GameManager.instance.AnswerList.Count + 1;
         }
 
-        newUpPos = upLidOpenPos.localPosition.y + (distanceUpLid * GameManager.instance.counter); 
-        newDownPos = downLidOpenPos.localPosition.y - (distanceDownLid * GameManager.instance.counter);
+        newUpPos = upLidOpenPos.localPosition.y + (distanceUpLid * counterIndicator); 
+        newDownPos = downLidOpenPos.localPosition.y - (distanceDownLid * counterIndicator);
 
         if (UplidRoutineRunning == true)
         {

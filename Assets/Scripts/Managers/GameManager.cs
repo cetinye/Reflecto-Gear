@@ -9,11 +9,12 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public int counter = 0;
     public GameState state = GameState.Idle;
     public int gearCountForCompletion;
+    public List<Gear> AnswerList = new List<Gear>();
 
     private Gear tappedGear;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -22,197 +23,108 @@ public class GameManager : MonoBehaviour
 
         UIManager.instance.UpdateLevelNo();
         UIManager.instance.UpdateBottomGearImage();
-        CheckOverlappingGears();
         gearCountForCompletion = LevelManager.instance.level.unchangeableGearCount;
 
         state = GameState.Idle;
     }
 
-    //mode parameter is for disabling level fail when CheckAtStart call this function
-    //default mode is 'a' but when we check at the start we pass 'b' so no level fail
-    //at the start
-    //This check is necessary for detecting unchangable gears that are already spawned
-    //symmetrical to the mirror
-    public void CalculateSymmetry(Gear gear, char mode = 'a')
+    public void Check(Gear gearToCheck)
     {
-        tappedGear = gear;
-
-        //mirror is vertical
-        if (LevelManager.instance.mirrorPosX != 0)
+        if (AnswerList.Contains(gearToCheck))
         {
-            int mirrorX = GetXofMirrorOnY(gear.Y);
-            int newX = (mirrorX - gear.X) + mirrorX;
-            Check(newX, gear.Y, mode);
+            AnswerList.Remove(gearToCheck);
+            gearToCheck.changable = false;
+            CheckLevelComplete();
+            UIManager.instance.LightGreen();
+            UIManager.instance.UpdateProgressBar();
+            Debug.LogWarning("CORRECT !");
         }
-
-        //mirror is horizontal
-        if (LevelManager.instance.mirrorPosY != 0)
+        else
         {
-            int mirrorY = GetYofMirrorOnX(gear.X);
-            int newY = (mirrorY - gear.Y) + mirrorY;
-            Check(gear.X, newY, mode);
+            Debug.LogError("FAIL !");
+
+            //unselect
+            tappedGear = gearToCheck;
+            StartCoroutine(UnselectGear());
+
+            UIManager.instance.LightRed();
         }
-    }
-
-    private void Check(int x, int y, char mode)
-    {
-        var listGear = GameObject.FindGameObjectsWithTag("Gear");
-
-        for (int i = 0; i < listGear.Length; i++)
-        {
-            if (listGear[i].GetComponent<Gear>().X == x && listGear[i].GetComponent<Gear>().Y == y)
-            {
-                if (listGear[i].GetComponent<Gear>().highlighted)
-                {
-                    listGear[i].GetComponent<Gear>().endgameFlag = true;
-                    listGear[i].GetComponent<Gear>().changable = false;
-                    if (mode == 'a')
-                    {
-                        tappedGear.changable = false;
-                        if (LevelManager.instance.level.Lshape && tappedGear.X < LevelManager.instance.mirrorPosX &&
-                            tappedGear.Y < LevelManager.instance.mirrorPosY)
-                        {
-                            gearCountForCompletion++;
-                            tappedGear.endgameFlag = false;
-                            //CheckOverlappingGears(); --occurs infinite loop of false selection
-                        }
-                    }
-                    CheckLevelComplete();
-                    UIManager.instance.LightGreen();
-                    Debug.LogWarning("CORRECT !");
-
-                    if (mode == 'a')
-                        break;
-                }
-                else
-                {
-                    if (!LevelManager.instance.level.Lshape && listGear[i].GetComponent<Gear>().changable == true && mode == 'a')
-                    {
-                        //Debug.LogError("X: " + x + ", Y: " + y);
-                        Debug.LogError("!!!  FALSE  !!!");
-
-                        UIManager.instance.LightRed();
-
-                        //unselect
-                        StartCoroutine(UnselectGear());
-                    }
-                }
-            }
-        }
-    }
-
-    public void CheckOverlappingGears()
-    {
-        var listchangableGear = GameObject.FindGameObjectsWithTag("Gear");
-        for (int i = 0; i < listchangableGear.Length; i++)
-        {
-
-            if (listchangableGear[i].GetComponent<Gear>().changable == false)
-                CalculateSymmetry(listchangableGear[i].GetComponent<Gear>(), 'b');
-
-            //out of reach gears
-            if (LevelManager.instance.level.Lshape)
-            {
-                if (listchangableGear[i].GetComponent<Gear>().X > LevelManager.instance.mirrorPosX &&
-                listchangableGear[i].GetComponent<Gear>().Y > LevelManager.instance.mirrorPosY)
-                {
-                    listchangableGear[i].GetComponent<Gear>().endgameFlag = true;
-                }
-
-                if (LevelManager.instance.mirrorPosY != 0 && listchangableGear[i].GetComponent<Gear>().Y >= (LevelManager.instance.mirrorPosY * 2) + 1 ||
-                listchangableGear[i].GetComponent<Gear>().Y < LevelManager.instance.mirrorPosY - ((LevelManager.instance.level.rowCount - 1) - LevelManager.instance.mirrorPosY))
-                {
-                    Debug.LogWarning(listchangableGear[i].gameObject.name);
-                    listchangableGear[i].GetComponent<Gear>().endgameFlag = true;
-                }
-
-            }
-            else
-            {
-                if (LevelManager.instance.mirrorPosY != 0 && listchangableGear[i].GetComponent<Gear>().Y >= (LevelManager.instance.mirrorPosY * 2) + 1 ||
-                listchangableGear[i].GetComponent<Gear>().Y < LevelManager.instance.mirrorPosY - ((LevelManager.instance.level.rowCount - 1) - LevelManager.instance.mirrorPosY))
-                {
-                    Debug.LogWarning(listchangableGear[i].gameObject.name);
-                    listchangableGear[i].GetComponent<Gear>().endgameFlag = true;
-                }
-
-                if (LevelManager.instance.mirrorPosX != 0 && listchangableGear[i].GetComponent<Gear>().X >= (LevelManager.instance.mirrorPosX * 2) + 1 ||
-                    listchangableGear[i].GetComponent<Gear>().X < LevelManager.instance.mirrorPosX - ((LevelManager.instance.level.columnCount - 1) - LevelManager.instance.mirrorPosX))
-                {
-                    Debug.LogWarning(listchangableGear[i].gameObject.name);
-                    listchangableGear[i].GetComponent<Gear>().endgameFlag = true;
-                }
-            }
-        }
+        
     }
 
     public void CheckLevelComplete()
     {
-        var listchangableGear = GameObject.FindGameObjectsWithTag("Gear");
-
-        for (int i = 0; i < listchangableGear.Length; i++)
+        if (AnswerList.Count == 0)
         {
-            if (listchangableGear[i].GetComponent<Gear>().changable == false && 
-                listchangableGear[i].GetComponent<Gear>().endgameFlag == true &&
-                listchangableGear[i].GetComponent<Gear>().isCalculated == false)
-            {
-                listchangableGear[i].GetComponent<Gear>().isCalculated = true;
-                counter++;
-                UIManager.instance.UpdateProgressBar();
-            }
-        }
-
-        if (counter == gearCountForCompletion)
-        {
-            //Debug.LogWarning("LEVEL COMPLETED");
             state = GameState.Success;
             StartCoroutine(LevelManager.instance.AnimateUnloadLevel());
         }
     }
 
-    public void CheckUnreachable(Gear gear)
+    public void CalculateCorrectGears()
     {
-        //mirror L shaped
-        if (LevelManager.instance.level.Lshape)
-        {
-            if (gear.X > LevelManager.instance.mirrorPosX && gear.Y > LevelManager.instance.mirrorPosY)
-            {
-                tappedGear = gear;
-                StartCoroutine(UnselectGear());
+        var gearList = GameObject.FindGameObjectsWithTag("Gear");
 
-                UIManager.instance.LightRed();
+        for (int i = 0; i < gearList.Length; i++)
+        {
+            if (gearList[i].GetComponent<Gear>().changable == false)
+            {
+                if (LevelManager.instance.mirrorPosX == 0 && LevelManager.instance.mirrorPosY != 0)
+                    FindGear(gearList[i].GetComponent<Gear>().X, MirrorOnY(gearList[i].GetComponent<Gear>()));
+
+                else if (LevelManager.instance.mirrorPosX != 0 && LevelManager.instance.mirrorPosY == 0)
+                    FindGear(MirrorOnX(gearList[i].GetComponent<Gear>()), gearList[i].GetComponent<Gear>().Y);
+
+                else
+                {
+                    if (gearList[i].GetComponent<Gear>().X < LevelManager.instance.mirrorPosX ||
+                        gearList[i].GetComponent<Gear>().Y < LevelManager.instance.mirrorPosY)
+                    {
+                        FindGear(MirrorOnX(gearList[i].GetComponent<Gear>()), gearList[i].GetComponent<Gear>().Y);
+                        FindGear(gearList[i].GetComponent<Gear>().X, MirrorOnY(gearList[i].GetComponent<Gear>()));
+                        FindGear(MirrorOnX(gearList[i].GetComponent<Gear>()), MirrorOnY(gearList[i].GetComponent<Gear>()));
+
+                    }
+                }
             }
         }
-        else
+    }
+
+    public void FindGear(int x, int y)
+    {
+        var gearsList = GameObject.FindGameObjectsWithTag("Gear");
+
+        for (int i = 0; i < gearsList.Length; i++)
         {
-            //mirror horizontal
-            if (LevelManager.instance.mirrorPosY != 0 && gear.Y >= (LevelManager.instance.mirrorPosY * 2) + 1 ||
-                gear.Y < LevelManager.instance.mirrorPosY - ((LevelManager.instance.level.rowCount - 1) - LevelManager.instance.mirrorPosY))
+            if (gearsList[i].GetComponent<Gear>().X == x && gearsList[i].GetComponent<Gear>().Y == y
+                && gearsList[i].GetComponent<Gear>().highlighted == false)
+                if (!AnswerList.Contains(gearsList[i].GetComponent<Gear>()))
+                    AnswerList.Add(gearsList[i].GetComponent<Gear>());
+
+            //L-shape out of reach
+            if (LevelManager.instance.level.Lshape)
             {
-                //level failed, tapped on unreachable gear
-                //Debug.LogError("FAIL ! Tapped on unreachable gear");
-
-                //unselect
-                tappedGear = gear;
-                StartCoroutine(UnselectGear());
-
-                UIManager.instance.LightRed();
-            }
-
-            //mirror vertical
-            if (LevelManager.instance.mirrorPosX != 0 && gear.X >= (LevelManager.instance.mirrorPosX * 2) + 1 ||
-                gear.X < LevelManager.instance.mirrorPosX - ((LevelManager.instance.level.columnCount - 1) - LevelManager.instance.mirrorPosX))
-            {
-                //level failed, tapped on unreachable gear
-                //Debug.LogError("FAIL ! Tapped on unreachable gear");
-
-                //unselect
-                tappedGear = gear;
-                StartCoroutine(UnselectGear());
-
-                UIManager.instance.LightRed();
+                if (gearsList[i].GetComponent<Gear>().X > LevelManager.instance.mirrorPosX &&
+                gearsList[i].GetComponent<Gear>().Y > LevelManager.instance.mirrorPosY)
+                {
+                    AnswerList.Remove(gearsList[i].GetComponent<Gear>());
+                }
             }
         }
+    }
+
+    public int MirrorOnX(Gear gear)
+    {
+        int mirrorX = GetXofMirrorOnY(gear.Y);
+        int newX = (mirrorX - gear.X) + mirrorX;
+        return newX;
+    }
+
+    public int MirrorOnY(Gear gear)
+    {
+        int mirrorY = GetYofMirrorOnX(gear.X);
+        int newY = (mirrorY - gear.Y) + mirrorY;
+        return newY;
     }
 
     private int GetYofMirrorOnX(int x)

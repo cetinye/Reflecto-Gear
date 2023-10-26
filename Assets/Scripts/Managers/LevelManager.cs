@@ -107,8 +107,6 @@ public class LevelManager : MonoBehaviour
                     if (level.Lshape && mirrorObj.GetComponent<Mirror>().Y > yMax)
                     {
                         mirrorObj.GetComponent<Image>().enabled = false;
-                        mirrorObj.GetComponent<Mirror>().X = 99;
-                        mirrorObj.GetComponent<Mirror>().Y = 99;
                     }
                 }
 
@@ -124,8 +122,6 @@ public class LevelManager : MonoBehaviour
                     if (level.Lshape && mirrorObj.GetComponent<Mirror>().X > xMax)
                     {
                         mirrorObj.GetComponent<Image>().enabled = false;
-                        mirrorObj.GetComponent<Mirror>().X = 99;
-                        mirrorObj.GetComponent<Mirror>().Y = 99;
                     }
                 }
 
@@ -198,7 +194,6 @@ public class LevelManager : MonoBehaviour
             Destroy(levelParent.transform.GetChild(i).gameObject);
         }
         mirrors.Clear();
-        GameManager.instance.counter = 0;
         UIManager.instance.updateProgressbarFlag = true;
 
         //increase level index
@@ -239,7 +234,7 @@ public class LevelManager : MonoBehaviour
         UIManager.instance.nextText.GetComponent<TextMeshProUGUI>().enabled = false;
         StartCoroutine(AnimateMirrors(true));
         StartCoroutine(UIManager.instance.OpenLid());
-        GameManager.instance.CheckOverlappingGears();
+        GameManager.instance.CalculateCorrectGears();
         GameManager.instance.state = GameManager.GameState.Playing;
     }
 
