@@ -1,14 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics.Tracing;
-using System.Text.RegularExpressions;
 using TMPro;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.CoreUtils;
+using static GameManager;
 using Random = UnityEngine.Random;
 
 public class LevelManager : MonoBehaviour
@@ -66,8 +62,8 @@ public class LevelManager : MonoBehaviour
 
     private void GenerateLevel()
     {
-        int yMax = Mathf.CeilToInt(level.rowCount / 2);
-        int xMax = Mathf.CeilToInt(level.columnCount / 2);
+        int yMax = level.mirrorYPos;
+        int xMax = level.mirrorXPos;
 
         //make grid arrangements
         if (level.autoFill)
@@ -80,10 +76,13 @@ public class LevelManager : MonoBehaviour
         ScaleGearCollider();
 
         if (level.randomizeMirrorOnX)
-            mirrorPosX = Random.Range(1, level.columnCount);
+            mirrorPosX = Random.Range(level.minRandomMirrorX, level.minRandomMirrorX);
 
         if (level.randomizeMirrorOnY)
-            mirrorPosY = Random.Range(1, level.rowCount - 1);
+            mirrorPosY = Random.Range(level.minRandomMirrorY, level.maxRandomMirrorY);
+
+        if (level.randomizeLshapePosition)
+            level.LshapePosition = (GameManager.LshapePosition)Random.Range(0, Enum.GetValues(typeof(GameManager.LshapePosition)).Length);
 
         //row count
         for (int y = 0; y < level.rowCount; y++)
@@ -102,17 +101,6 @@ public class LevelManager : MonoBehaviour
                     mirrorObj.gameObject.name = mirrorObj.gameObject.name + " " + x + "," + y;
                     mirrorObj.SetActive(false);
 
-                    if (level.Lshape && mirrorObj.GetComponent<Mirror>().Y >= yMax)
-                    {
-                        if (level.LshapePosition == GameManager.LshapePosition.TopRight || level.LshapePosition == GameManager.LshapePosition.TopLeft)
-                            mirrorObj.GetComponent<Image>().enabled = false;
-                    }
-                    else if (level.Lshape && mirrorObj.GetComponent<Mirror>().Y <= yMax)
-                    {
-                        if (level.LshapePosition == GameManager.LshapePosition.BottomRight || level.LshapePosition == GameManager.LshapePosition.BottomLeft)
-                            mirrorObj.GetComponent<Image>().enabled = false;
-                    }
-
                     if (level.Lshape && x == mirrorPosX && y == mirrorPosY)
                     {
                         mirrorObj.transform.localScale = new Vector3(0.46f, 0.52f, 1f);
@@ -129,17 +117,6 @@ public class LevelManager : MonoBehaviour
                     mirrorObj.gameObject.name = mirrorObj.gameObject.name + " "+ x + "," + y;
                     mirrorObj.SetActive(false);
 
-                    if (level.Lshape && mirrorObj.GetComponent<Mirror>().X > xMax)
-                    {
-                        if (level.LshapePosition == GameManager.LshapePosition.TopLeft || level.LshapePosition == GameManager.LshapePosition.BottomLeft)
-                            mirrorObj.GetComponent<Image>().enabled = false;
-                    }
-
-                    else if (level.Lshape && mirrorObj.GetComponent<Mirror>().X <= xMax)
-                    {
-                        if (level.LshapePosition == GameManager.LshapePosition.TopRight || level.LshapePosition == GameManager.LshapePosition.BottomRight)
-                            mirrorObj.GetComponent<Image>().enabled = false;
-                    }
                 }
                 //gear
                 else
@@ -153,6 +130,9 @@ public class LevelManager : MonoBehaviour
             }
         }
 
+        if (level.Lshape)
+            ArrangeMirrors();
+        
         RandomizeGears();
     }
 
@@ -174,7 +154,34 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    private void ScaleGearCollider()
+    private void ArrangeMirrors()
+    {
+        for (int i = 0; i < mirrors.Count; i++)
+        {
+            if (level.LshapePosition == LshapePosition.TopRight)
+                if (mirrors[i].GetComponent<Mirror>().X < mirrorPosX ||
+                    mirrors[i].GetComponent<Mirror>().Y > mirrorPosY)
+                        mirrors[i].GetComponent<Image>().enabled = false;
+
+            if (level.LshapePosition == LshapePosition.TopLeft)
+                if (mirrors[i].GetComponent<Mirror>().X > mirrorPosX ||
+                    mirrors[i].GetComponent<Mirror>().Y > mirrorPosY)
+                        mirrors[i].GetComponent<Image>().enabled = false;
+
+            if (level.LshapePosition == LshapePosition.BottomRight)
+                if (mirrors[i].GetComponent<Mirror>().X < mirrorPosX ||
+                    mirrors[i].GetComponent<Mirror>().Y < mirrorPosY)
+                        mirrors[i].GetComponent<Image>().enabled = false;
+
+            if (level.LshapePosition == LshapePosition.BottomLeft)
+                if (mirrors[i].GetComponent<Mirror>().X > mirrorPosX ||
+                    mirrors[i].GetComponent<Mirror>().Y < mirrorPosY)
+                        mirrors[i].GetComponent<Image>().enabled = false;
+        }
+    }
+
+
+private void ScaleGearCollider()
     {
         changeableGear.GetComponent<CircleCollider2D>().radius = cellSize / 2f;
         unchangeableGear.GetComponent<CircleCollider2D>().radius = cellSize / 2f;

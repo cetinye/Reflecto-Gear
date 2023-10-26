@@ -15,7 +15,14 @@ public class LevelSO : ScriptableObject
     public int mirrorYPos;
     public bool randomizeMirrorOnX;
     public bool randomizeMirrorOnY;
+    [Header("Min -> Inclusive | Max -> Exclusive")]
+    public int minRandomMirrorX;
+    public int maxRandomMirrorX;
+    public int minRandomMirrorY;
+    public int maxRandomMirrorY;
+    [Header("L-shaped Mirror variables")]
     public bool Lshape;
+    public bool randomizeLshapePosition;
     public GameManager.LshapePosition LshapePosition;
 
     [Header("Sprites")]
