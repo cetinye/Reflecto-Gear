@@ -1209,12 +1209,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d879023032739584c805ec710f01e8b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelId: 2
+  levelId: 0
   level: {fileID: 0}
   levelList:
   - {fileID: 11400000, guid: 9cb26564dbf0c3540898cb9db6f00a88, type: 2}
   - {fileID: 11400000, guid: 566490feed644d547bec4e6393f29d9e, type: 2}
+  - {fileID: 11400000, guid: 605a8079b78406a4dbead1bd02420e3f, type: 2}
   - {fileID: 11400000, guid: 2ce168655d82d164686356320bbe9754, type: 2}
+  - {fileID: 11400000, guid: 2e992e69da05252428b59a2999a12569, type: 2}
+  - {fileID: 11400000, guid: e6f08867a59c55447971f8b1137ea8a5, type: 2}
+  - {fileID: 11400000, guid: 8bda461ade82f664491a3af3bcdde65f, type: 2}
   mirrorPosY: 0
   mirrorPosX: 0
   gearSpawnTime: 0.0625
@@ -2200,9 +2204,9 @@ MonoBehaviour:
   timeToColor: 1
   updateProgressbarFlag: 1
   nextText: {fileID: 1922985383}
-  counterIndicator: 1
+  counterIndicator: 0
   countdownTime: 3
-  timeRemaining: 60
+  timeRemaining: 180
   timeToMove: 0.5
   upLid: {fileID: 1620610676}
   downLid: {fileID: 1606958842}

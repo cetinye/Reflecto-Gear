@@ -31,8 +31,8 @@ public class GameManager : MonoBehaviour
         if (AnswerList.Contains(gearToCheck))
         {
             UIManager.instance.UpdateProgressBar();
-            AnswerList.Remove(gearToCheck);
             gearToCheck.changable = false;
+            AnswerList.Remove(gearToCheck);
             CheckLevelComplete();
             UIManager.instance.LightGreen();
             Debug.LogWarning("CORRECT !");

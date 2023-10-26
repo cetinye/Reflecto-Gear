@@ -47,7 +47,6 @@ public class Gear : MonoBehaviour, IGear
                 this.GetComponent<Image>().sprite = LevelManager.instance.level.selected;
                 this.highlighted = true;
 
-                //GameManager.instance.CheckUnreachable(this);
                 GameManager.instance.Check(this);
             }
         }

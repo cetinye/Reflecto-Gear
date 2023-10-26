@@ -32,11 +32,8 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject mirror;
     [SerializeField] private GameObject levelParent;
 
-    private string[][] levelBase;
     private Vector3 startingPos;
-    private Vector2 lastPos;
     private float cellSize;
-    private GameObject objToCheck;
     private List<GameObject> mirrors = new List<GameObject>();
     
 
@@ -46,7 +43,7 @@ public class LevelManager : MonoBehaviour
         instance = this;
 
         //on default start level index 0
-        //levelId = PlayerPrefs.GetInt("level", 0);
+        levelId = PlayerPrefs.GetInt("level", 0);
 
         ReadLevelData();
         ChangeGearSprite();
@@ -115,6 +112,12 @@ public class LevelManager : MonoBehaviour
                         if (level.LshapePosition == GameManager.LshapePosition.BottomRight || level.LshapePosition == GameManager.LshapePosition.BottomLeft)
                             mirrorObj.GetComponent<Image>().enabled = false;
                     }
+
+                    if (level.Lshape && x == mirrorPosX && y == mirrorPosY)
+                    {
+                        mirrorObj.transform.localScale = new Vector3(0.46f, 0.52f, 1f);
+                        mirrorObj.GetComponent<Image>().enabled = true;
+                    }
                 }
                 //horizontal mirror
                 else if (y != 0 && y == mirrorPosY)
@@ -132,13 +135,13 @@ public class LevelManager : MonoBehaviour
                             mirrorObj.GetComponent<Image>().enabled = false;
                     }
 
-                    else if (level.Lshape && mirrorObj.GetComponent<Mirror>().X < xMax)
+                    else if (level.Lshape && mirrorObj.GetComponent<Mirror>().X <= xMax)
                     {
                         if (level.LshapePosition == GameManager.LshapePosition.TopRight || level.LshapePosition == GameManager.LshapePosition.BottomRight)
                             mirrorObj.GetComponent<Image>().enabled = false;
                     }
                 }
-
+                //gear
                 else
                 {
                     GameObject tempGear = Instantiate(changeableGear, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
