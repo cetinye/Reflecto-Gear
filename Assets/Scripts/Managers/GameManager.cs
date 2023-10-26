@@ -75,13 +75,50 @@ public class GameManager : MonoBehaviour
 
                 else
                 {
-                    if (gearList[i].GetComponent<Gear>().X < LevelManager.instance.mirrorPosX ||
-                        gearList[i].GetComponent<Gear>().Y < LevelManager.instance.mirrorPosY)
+                    switch (LevelManager.instance.level.LshapePosition)
                     {
-                        FindGear(MirrorOnX(gearList[i].GetComponent<Gear>()), gearList[i].GetComponent<Gear>().Y);
-                        FindGear(gearList[i].GetComponent<Gear>().X, MirrorOnY(gearList[i].GetComponent<Gear>()));
-                        FindGear(MirrorOnX(gearList[i].GetComponent<Gear>()), MirrorOnY(gearList[i].GetComponent<Gear>()));
+                        case LshapePosition.TopRight:
+                            if (gearList[i].GetComponent<Gear>().X > LevelManager.instance.mirrorPosX ||
+                                gearList[i].GetComponent<Gear>().Y < LevelManager.instance.mirrorPosY)
+                            {
+                                FindGear(MirrorOnX(gearList[i].GetComponent<Gear>()), gearList[i].GetComponent<Gear>().Y);
+                                FindGear(gearList[i].GetComponent<Gear>().X, MirrorOnY(gearList[i].GetComponent<Gear>()));
+                                FindGear(MirrorOnX(gearList[i].GetComponent<Gear>()), MirrorOnY(gearList[i].GetComponent<Gear>()));
 
+                            }
+                            break;
+                        case LshapePosition.TopLeft:
+                            if (gearList[i].GetComponent<Gear>().X < LevelManager.instance.mirrorPosX ||
+                                gearList[i].GetComponent<Gear>().Y < LevelManager.instance.mirrorPosY)
+                            {
+                                FindGear(MirrorOnX(gearList[i].GetComponent<Gear>()), gearList[i].GetComponent<Gear>().Y);
+                                FindGear(gearList[i].GetComponent<Gear>().X, MirrorOnY(gearList[i].GetComponent<Gear>()));
+                                FindGear(MirrorOnX(gearList[i].GetComponent<Gear>()), MirrorOnY(gearList[i].GetComponent<Gear>()));
+
+                            }
+                            break;
+                        case LshapePosition.BottomRight:
+                            if (gearList[i].GetComponent<Gear>().X > LevelManager.instance.mirrorPosX ||
+                                gearList[i].GetComponent<Gear>().Y > LevelManager.instance.mirrorPosY)
+                            {
+                                FindGear(MirrorOnX(gearList[i].GetComponent<Gear>()), gearList[i].GetComponent<Gear>().Y);
+                                FindGear(gearList[i].GetComponent<Gear>().X, MirrorOnY(gearList[i].GetComponent<Gear>()));
+                                FindGear(MirrorOnX(gearList[i].GetComponent<Gear>()), MirrorOnY(gearList[i].GetComponent<Gear>()));
+
+                            }
+                            break;
+                        case LshapePosition.BottomLeft:
+                            if (gearList[i].GetComponent<Gear>().X < LevelManager.instance.mirrorPosX ||
+                                gearList[i].GetComponent<Gear>().Y > LevelManager.instance.mirrorPosY)
+                            {
+                                FindGear(MirrorOnX(gearList[i].GetComponent<Gear>()), gearList[i].GetComponent<Gear>().Y);
+                                FindGear(gearList[i].GetComponent<Gear>().X, MirrorOnY(gearList[i].GetComponent<Gear>()));
+                                FindGear(MirrorOnX(gearList[i].GetComponent<Gear>()), MirrorOnY(gearList[i].GetComponent<Gear>()));
+
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
             }
@@ -102,10 +139,42 @@ public class GameManager : MonoBehaviour
             //L-shape out of reach
             if (LevelManager.instance.level.Lshape)
             {
-                if (gearsList[i].GetComponent<Gear>().X > LevelManager.instance.mirrorPosX &&
-                gearsList[i].GetComponent<Gear>().Y > LevelManager.instance.mirrorPosY)
+                switch (LevelManager.instance.level.LshapePosition)
                 {
-                    AnswerList.Remove(gearsList[i].GetComponent<Gear>());
+                    case LshapePosition.TopRight:
+                        if (gearsList[i].GetComponent<Gear>().X < LevelManager.instance.mirrorPosX &&
+                            gearsList[i].GetComponent<Gear>().Y > LevelManager.instance.mirrorPosY)
+                        {
+                            AnswerList.Remove(gearsList[i].GetComponent<Gear>());
+                        }
+                        break;
+
+                    case LshapePosition.TopLeft:
+                        if (gearsList[i].GetComponent<Gear>().X > LevelManager.instance.mirrorPosX &&
+                            gearsList[i].GetComponent<Gear>().Y > LevelManager.instance.mirrorPosY)
+                        {
+                            AnswerList.Remove(gearsList[i].GetComponent<Gear>());
+                        }
+                        break;
+
+                    case LshapePosition.BottomRight:
+                        if (gearsList[i].GetComponent<Gear>().X < LevelManager.instance.mirrorPosX &&
+                            gearsList[i].GetComponent<Gear>().Y < LevelManager.instance.mirrorPosY)
+                        {
+                            AnswerList.Remove(gearsList[i].GetComponent<Gear>());
+                        }
+                        break;
+
+                    case LshapePosition.BottomLeft:
+                        if (gearsList[i].GetComponent<Gear>().X > LevelManager.instance.mirrorPosX &&
+                            gearsList[i].GetComponent<Gear>().Y < LevelManager.instance.mirrorPosY)
+                        {
+                            AnswerList.Remove(gearsList[i].GetComponent<Gear>());
+                        }
+                        break;
+
+                    default:
+                        break;
                 }
             }
         }
@@ -163,5 +232,13 @@ public class GameManager : MonoBehaviour
         Success,
         Failed,
         Playing
+    }
+
+    public enum LshapePosition
+    {
+        TopRight,
+        TopLeft,
+        BottomRight,
+        BottomLeft
     }
 }

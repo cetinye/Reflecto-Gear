@@ -94,6 +94,7 @@ public class LevelManager : MonoBehaviour
             //column count
             for (int x = 0; x < level.columnCount; x++)
             {
+                //vertical mirror
                 if (x != 0 && x == mirrorPosX)
                 {
                     GameObject mirrorObj = Instantiate(mirror, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
@@ -104,12 +105,18 @@ public class LevelManager : MonoBehaviour
                     mirrorObj.gameObject.name = mirrorObj.gameObject.name + " " + x + "," + y;
                     mirrorObj.SetActive(false);
 
-                    if (level.Lshape && mirrorObj.GetComponent<Mirror>().Y > yMax)
+                    if (level.Lshape && mirrorObj.GetComponent<Mirror>().Y >= yMax)
                     {
-                        mirrorObj.GetComponent<Image>().enabled = false;
+                        if (level.LshapePosition == GameManager.LshapePosition.TopRight || level.LshapePosition == GameManager.LshapePosition.TopLeft)
+                            mirrorObj.GetComponent<Image>().enabled = false;
+                    }
+                    else if (level.Lshape && mirrorObj.GetComponent<Mirror>().Y <= yMax)
+                    {
+                        if (level.LshapePosition == GameManager.LshapePosition.BottomRight || level.LshapePosition == GameManager.LshapePosition.BottomLeft)
+                            mirrorObj.GetComponent<Image>().enabled = false;
                     }
                 }
-
+                //horizontal mirror
                 else if (y != 0 && y == mirrorPosY)
                 {
                     GameObject mirrorObj = Instantiate(mirror, new Vector3(startingPos.x, startingPos.y, startingPos.z), Quaternion.identity, levelParent.transform);
@@ -121,7 +128,14 @@ public class LevelManager : MonoBehaviour
 
                     if (level.Lshape && mirrorObj.GetComponent<Mirror>().X > xMax)
                     {
-                        mirrorObj.GetComponent<Image>().enabled = false;
+                        if (level.LshapePosition == GameManager.LshapePosition.TopLeft || level.LshapePosition == GameManager.LshapePosition.BottomLeft)
+                            mirrorObj.GetComponent<Image>().enabled = false;
+                    }
+
+                    else if (level.Lshape && mirrorObj.GetComponent<Mirror>().X < xMax)
+                    {
+                        if (level.LshapePosition == GameManager.LshapePosition.TopRight || level.LshapePosition == GameManager.LshapePosition.BottomRight)
+                            mirrorObj.GetComponent<Image>().enabled = false;
                     }
                 }
 

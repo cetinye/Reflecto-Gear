@@ -1164,7 +1164,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
-  gearCountForCompletion: 0
   AnswerList: []
 --- !u!4 &613027674
 Transform:
@@ -1210,7 +1209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d879023032739584c805ec710f01e8b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelId: 0
+  levelId: 2
   level: {fileID: 0}
   levelList:
   - {fileID: 11400000, guid: 9cb26564dbf0c3540898cb9db6f00a88, type: 2}
@@ -2201,6 +2200,7 @@ MonoBehaviour:
   timeToColor: 1
   updateProgressbarFlag: 1
   nextText: {fileID: 1922985383}
+  counterIndicator: 1
   countdownTime: 3
   timeRemaining: 60
   timeToMove: 0.5
