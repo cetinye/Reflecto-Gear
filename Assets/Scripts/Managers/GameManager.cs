@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
         UIManager.instance.UpdateLevelNo();
         UIManager.instance.UpdateBottomGearImage();
 
-        state = GameState.Idle;
+        state = GameState.Intro;
     }
 
     public void Check(Gear gearToCheck)
@@ -36,6 +36,8 @@ public class GameManager : MonoBehaviour
         {
             UIManager.instance.UpdateProgressBar();
             gearToCheck.changable = false;
+            gearToCheck.TurnGreen();
+            AudioManager.instance.Play("Correct");
             AnswerList.Remove(gearToCheck);
             CheckLevelComplete();
             UIManager.instance.LightGreen();
@@ -44,11 +46,12 @@ public class GameManager : MonoBehaviour
         //if not wrong move
         else
         {
-            Debug.LogWarning("FAIL !");
+            Debug.LogWarning("WRONG !");
             errorCounter++;
 
             //unselect gear
             tappedGear = gearToCheck;
+            AudioManager.instance.Play("Wrong");
             StartCoroutine(UnselectGear());
 
             UIManager.instance.LightRed();
@@ -245,6 +248,7 @@ public class GameManager : MonoBehaviour
 
     public enum GameState
     {
+        Intro,
         Idle,
         Success,
         Failed,

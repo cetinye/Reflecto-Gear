@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class UIManager : MonoBehaviour
 {
@@ -28,6 +29,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI time;
     [SerializeField] private Image bottomGearUp;
     [SerializeField] private Image bottomGearDown;
+    [SerializeField] private VideoPlayer videoPlayer;
+    [SerializeField] private GameObject videoOnCanvas;
+    [SerializeField] private GameObject skipButton;
 
     private float distanceUpLid;
     private float distanceDownLid;
@@ -37,6 +41,16 @@ public class UIManager : MonoBehaviour
     private bool DownlidRoutineRunning = false;
     private bool isRedFinished = true;
     private bool isGreenFinished = true;
+    private int introWatchedBefore;
+
+    private void Awake()
+    {
+        countdownTime += (int)videoPlayer.clip.length;
+        Invoke("EndReached", (float)videoPlayer.clip.length);
+        introWatchedBefore = PlayerPrefs.GetInt("introWatchedBefore", 0);
+        if (introWatchedBefore == 1)
+            skipButton.SetActive(true);
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -113,6 +127,30 @@ public class UIManager : MonoBehaviour
 
         //make timer in 0:00 format
         time.text = string.Format("{0:00}", timeRemaining);
+    }
+
+    private void EndReached()
+    { 
+        //close the gameobject and stop the video
+        videoOnCanvas.SetActive(false);
+        PlayerPrefs.SetInt("introWatchedBefore", 1);
+        skipButton.SetActive(false);
+        videoPlayer.Stop();
+        GameManager.instance.state = GameManager.GameState.Idle;
+        AudioManager.instance.Play("BackgroundMusic");
+    }
+
+    public void SkipIntro()
+    {
+        CancelInvoke();
+        videoPlayer.Stop();
+        skipButton.SetActive(false);
+        videoOnCanvas.SetActive(false);
+        GameManager.instance.state = GameManager.GameState.Idle;
+        //update countdown
+        countdownTime = 3;
+        countdownText.text = countdownTime.ToString();
+        AudioManager.instance.Play("BackgroundMusic");
     }
 
     IEnumerator UplidLerp()

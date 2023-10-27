@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using Image = UnityEngine.UI.Image;
 
@@ -39,5 +40,17 @@ public class Gear : MonoBehaviour, IGear
                 GameManager.instance.Check(this);
             }
         }
+    }
+
+    public void TurnGreen()
+    {
+        StartCoroutine(TurnGreenRoutine());
+    }
+
+    IEnumerator TurnGreenRoutine()
+    {
+        this.GetComponent<Image>().color = Color.green;
+        yield return new WaitForSeconds(UIManager.instance.timeToColor);
+        this.GetComponent<Image>().color = Color.white;
     }
 }

@@ -31,27 +31,9 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject emptyCell;
     [SerializeField] private GameObject mirror;
     [SerializeField] private GameObject levelParent;
-    [SerializeField] private VideoPlayer videoPlayer;
-    [SerializeField] private GameObject videoOnCanvas;
 
     private Vector3 startingPos;
     private float cellSize;
-
-    private void Awake()
-    {
-        //videoplayer variable assignments
-        GameObject camera = GameObject.Find("Main Camera");
-        videoPlayer.targetCamera = camera.GetComponent<Camera>();
-        videoPlayer.renderMode = UnityEngine.Video.VideoRenderMode.CameraNearPlane;
-        Invoke("EndReached", (float)videoPlayer.clip.length);
-    }
-
-    void EndReached()
-    {
-        //close the gameobject and stop the video
-        videoOnCanvas.SetActive(false);
-        videoPlayer.Stop();
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -322,6 +304,7 @@ public class LevelManager : MonoBehaviour
             if (!levelParent.transform.GetChild(i).TryGetComponent<Mirror>(out Mirror _mirror))
             {
                 levelParent.transform.GetChild(i).GetComponent<Image>().enabled = true;
+                AudioManager.instance.Play("GearSpawn");
                 yield return new WaitForSeconds(gearSpawnTime);
             }
         }
@@ -347,6 +330,7 @@ public class LevelManager : MonoBehaviour
             if (!levelParent.transform.GetChild(i).TryGetComponent<Mirror>(out Mirror _mirror))
             {
                 levelParent.transform.GetChild(i).GetComponent<Image>().enabled = false;
+                AudioManager.instance.Play("GearSpawn");
                 yield return new WaitForSeconds(gearSpawnTime);
             }
         }
@@ -361,7 +345,7 @@ public class LevelManager : MonoBehaviour
         {
             mirrors[i].SetActive(boolean);
         }
-
+        AudioManager.instance.Play("MirrorSpawn");
         yield return null;
     }
 }
