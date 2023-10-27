@@ -1166,6 +1166,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   AnswerList: []
+  levelDifState: 2
+  sameLevelFlag: 0
 --- !u!4 &613027674
 Transform:
   m_ObjectHideFlags: 0
@@ -1213,11 +1215,15 @@ MonoBehaviour:
   levelId: 0
   level: {fileID: 0}
   levelList:
-  - {fileID: 11400000, guid: 75bdeb04bc6f1a24d89316e554ceac3c, type: 2}
-  - {fileID: 11400000, guid: f56c25f54ce19c343b2b3c92adb5bca1, type: 2}
-  - {fileID: 11400000, guid: 566490feed644d547bec4e6393f29d9e, type: 2}
+  - {fileID: 11400000, guid: 9cb26564dbf0c3540898cb9db6f00a88, type: 2}
+  - {fileID: 11400000, guid: 67db13cba74065b468120578f197bf9e, type: 2}
+  - {fileID: 11400000, guid: c170071fdd3dd4f449a43b5c08fa218a, type: 2}
+  - {fileID: 11400000, guid: ec20357d63de6ba4595c06024fa5d90d, type: 2}
+  - {fileID: 11400000, guid: 2081dffbe9e1275468d6970585017741, type: 2}
   mirrorPosY: 0
   mirrorPosX: 0
+  gears: []
+  mirrors: []
   gearSpawnTime: 0.0625
   numOfUnchangeable: 30
   amountToMovePosX: 1
@@ -2204,7 +2210,7 @@ MonoBehaviour:
   updateProgressbarFlag: 1
   nextText: {fileID: 1922985383}
   counterIndicator: 0
-  countdownTime: 14
+  countdownTime: 0
   timeRemaining: 180
   timeToMove: 0.5
   upLid: {fileID: 1620610676}
@@ -2827,7 +2833,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &2106939608
 CanvasRenderer:
   m_ObjectHideFlags: 0

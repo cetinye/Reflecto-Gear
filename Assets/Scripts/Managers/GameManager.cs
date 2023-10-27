@@ -9,6 +9,11 @@ public class GameManager : MonoBehaviour
 
     public GameState state = GameState.Idle;
     public List<Gear> AnswerList = new List<Gear>();
+    public LevelDifficultyState levelDifState = LevelDifficultyState.Harder;
+    public bool sameLevelFlag = false;
+    public bool levelFailedBefore = false;
+    public int errorCounter = 0;
+    public int counterForHarderLvl = 0;
 
     private Gear tappedGear;
     
@@ -40,6 +45,7 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.LogWarning("FAIL !");
+            errorCounter++;
 
             //unselect gear
             tappedGear = gearToCheck;
@@ -47,7 +53,7 @@ public class GameManager : MonoBehaviour
 
             UIManager.instance.LightRed();
         }
-        
+        levelDifState = LevelDifficultyState.Same;
     }
 
     public void CheckLevelComplete()
@@ -251,5 +257,12 @@ public class GameManager : MonoBehaviour
         TopLeft,
         BottomRight,
         BottomLeft
+    }
+
+    public enum LevelDifficultyState
+    {
+        Easier,
+        Same,
+        Harder
     }
 }

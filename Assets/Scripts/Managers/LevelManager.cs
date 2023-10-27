@@ -93,7 +93,7 @@ public class LevelManager : MonoBehaviour
         ScaleGearCollider();
 
         if (level.randomizeMirrorOnX)
-            mirrorPosX = Random.Range(level.minRandomMirrorX, level.minRandomMirrorX);
+            mirrorPosX = Random.Range(level.minRandomMirrorX, level.maxRandomMirrorX);
 
         if (level.randomizeMirrorOnY)
             mirrorPosY = Random.Range(level.minRandomMirrorY, level.maxRandomMirrorY);
@@ -241,13 +241,8 @@ public class LevelManager : MonoBehaviour
         gears.Clear();
         UIManager.instance.updateProgressbarFlag = true;
 
-        //increase level index
-        levelId++;
-        if (levelId >= levelList.Count)
-        {
-            levelId = 0;
-        }
-        PlayerPrefs.SetInt("level", levelId);
+        //decide on which level to load
+        DecideLevelIndex();
 
         //create level
         ReadLevelData();
@@ -261,7 +256,61 @@ public class LevelManager : MonoBehaviour
         UIManager.instance.UpdateBottomGearImage();
         yield return new WaitForEndOfFrame();
         UIManager.instance.counterIndicator = 0;
+        GameManager.instance.errorCounter = 0;
         StartCoroutine(AnimateLoadLevel());
+    }
+
+    private void DecideLevelIndex()
+    {
+        if (GameManager.instance.levelDifState == LevelDifficultyState.Same)
+        {
+            GameManager.instance.sameLevelFlag = true;
+
+            //if completed without error, increment progress counter
+            if (GameManager.instance.errorCounter == 0)
+                GameManager.instance.counterForHarderLvl++;
+
+            //checking if player played lvlX, X times. If yes load harder level
+            if (GameManager.instance.sameLevelFlag && GameManager.instance.counterForHarderLvl == levelId + 1)
+                GameManager.instance.levelDifState = LevelDifficultyState.Harder;
+
+            //if made error before and made again this level, load easier
+            if (GameManager.instance.levelFailedBefore && GameManager.instance.errorCounter != 0)
+                GameManager.instance.levelDifState = LevelDifficultyState.Easier;
+
+            //if made error decrease progress counter
+            if (GameManager.instance.errorCounter != 0)
+            {
+                GameManager.instance.levelFailedBefore = true;
+                GameManager.instance.counterForHarderLvl--;
+            }
+        }
+
+        if (GameManager.instance.levelDifState == LevelDifficultyState.Harder)
+        {
+            levelId++;
+            if (levelId >= levelList.Count)
+            {
+                levelId = 0;
+            }
+            GameManager.instance.sameLevelFlag = false;
+            GameManager.instance.levelFailedBefore = false;
+            GameManager.instance.counterForHarderLvl = 0;
+        }
+        
+        else if (GameManager.instance.levelDifState == LevelDifficultyState.Easier)
+        {
+            levelId--;
+            if (levelId <= 0)
+            {
+                levelId = 0;
+            }
+            GameManager.instance.sameLevelFlag = false;
+            GameManager.instance.levelFailedBefore = false;
+            GameManager.instance.counterForHarderLvl = 0;
+        }
+
+        PlayerPrefs.SetInt("level", levelId);
     }
 
     public IEnumerator AnimateLoadLevel()
