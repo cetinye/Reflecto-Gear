@@ -19,6 +19,9 @@ public class LevelManager : MonoBehaviour
     public int mirrorPosY;
     public int mirrorPosX;
 
+    public List<GameObject> gears = new List<GameObject>();
+    public List<GameObject> mirrors = new List<GameObject>();
+
     [SerializeField] private float gearSpawnTime;
     [SerializeField] private int numOfUnchangeable;
     [SerializeField] private float amountToMovePosX;
@@ -33,11 +36,10 @@ public class LevelManager : MonoBehaviour
 
     private Vector3 startingPos;
     private float cellSize;
-    private List<GameObject> mirrors = new List<GameObject>();
 
     private void Awake()
     {
-        //Time.timeScale = 0f;
+        //videoplayer variable assignments
         GameObject camera = GameObject.Find("Main Camera");
         videoPlayer.targetCamera = camera.GetComponent<Camera>();
         videoPlayer.renderMode = UnityEngine.Video.VideoRenderMode.CameraNearPlane;
@@ -46,7 +48,7 @@ public class LevelManager : MonoBehaviour
 
     void EndReached()
     {
-        Time.timeScale = 1f;
+        //close the gameobject and stop the video
         videoOnCanvas.SetActive(false);
         videoPlayer.Stop();
     }
@@ -80,10 +82,7 @@ public class LevelManager : MonoBehaviour
 
     private void GenerateLevel()
     {
-        int yMax = level.mirrorYPos;
-        int xMax = level.mirrorXPos;
-
-        //make grid arrangements
+        //make grid arrangements if autofill enabled
         if (level.autoFill)
             ArrangeGrid();
 
@@ -144,6 +143,7 @@ public class LevelManager : MonoBehaviour
                     tempGear.GetComponent<Gear>().Y = y;
                     tempGear.gameObject.name = tempGear.gameObject.name + x + " -" + y;
                     tempGear.GetComponent<Image>().enabled = false;
+                    gears.Add(tempGear);
                 }
             }
         }
@@ -154,6 +154,7 @@ public class LevelManager : MonoBehaviour
         RandomizeGears();
     }
 
+    //randomly select unchangeable gears
     private void RandomizeGears()
     {
         int counter = 0;
@@ -172,6 +173,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    //close mirrors regarding selected shape
     private void ArrangeMirrors()
     {
         for (int i = 0; i < mirrors.Count; i++)
@@ -199,7 +201,7 @@ public class LevelManager : MonoBehaviour
     }
 
 
-private void ScaleGearCollider()
+    private void ScaleGearCollider()
     {
         changeableGear.GetComponent<CircleCollider2D>().radius = cellSize / 2f;
         unchangeableGear.GetComponent<CircleCollider2D>().radius = cellSize / 2f;
@@ -236,6 +238,7 @@ private void ScaleGearCollider()
             Destroy(levelParent.transform.GetChild(i).gameObject);
         }
         mirrors.Clear();
+        gears.Clear();
         UIManager.instance.updateProgressbarFlag = true;
 
         //increase level index

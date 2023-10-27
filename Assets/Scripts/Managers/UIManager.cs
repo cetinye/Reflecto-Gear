@@ -67,8 +67,10 @@ public class UIManager : MonoBehaviour
 
     public void UpdateProgressBar()
     {
+        //increment counter everytime correct move is played and progressbar update
         counterIndicator++;
 
+        //calculate the distance between starting pos and end pos only once for each level
         if (updateProgressbarFlag)
         {
             updateProgressbarFlag = false;
@@ -76,6 +78,7 @@ public class UIManager : MonoBehaviour
             distanceDownLid = (downLidOpenPos.localPosition.y - downLidFinalPos.transform.localPosition.y) / GameManager.instance.AnswerList.Count;
         }
 
+        //add the distance needs to be travelled 
         newUpPos = upLidOpenPos.localPosition.y + (distanceUpLid * counterIndicator); 
         newDownPos = downLidOpenPos.localPosition.y - (distanceDownLid * counterIndicator);
 
@@ -108,10 +111,6 @@ public class UIManager : MonoBehaviour
             timeRemaining = 0;
         }
 
-        //1:59 format
-        //minutes = Mathf.FloorToInt(timeRemaining / 60);
-        //seconds = Mathf.FloorToInt(timeRemaining % 60);
-
         //make timer in 0:00 format
         time.text = string.Format("{0:00}", timeRemaining);
     }
@@ -123,7 +122,6 @@ public class UIManager : MonoBehaviour
         Vector3 startVal = upLid.transform.localPosition;
         while (timeElapsed < timeToMove)
         {
-            //upLid.transform.localPosition = new Vector3 (upLid.transform.localPosition.x, Mathf.Lerp(upLid.transform.localPosition.y, newUpPos, timeElapsed / timeToMove), upLid.transform.localPosition.z);
             upLid.transform.localPosition = Vector3.Lerp(startVal, new Vector3 (upLid.transform.localPosition.x, newUpPos, upLid.transform.localPosition.z), timeElapsed / timeToMove);
             timeElapsed += Time.deltaTime;
             yield return null;
@@ -139,7 +137,6 @@ public class UIManager : MonoBehaviour
         Vector3 startVal = downLid.transform.localPosition;
         while (timeElapsed < timeToMove)
         {
-            //downLid.transform.localPosition = new Vector3(downLid.transform.localPosition.x, Mathf.Lerp(downLid.transform.localPosition.y, newDownPos, timeElapsed / timeToMove), downLid.transform.localPosition.z);
             downLid.transform.localPosition = Vector3.Lerp(startVal, new Vector3(downLid.transform.localPosition.x, newDownPos, downLid.transform.localPosition.z), timeElapsed / timeToMove);
             timeElapsed += Time.deltaTime;
             yield return null;
@@ -160,7 +157,6 @@ public class UIManager : MonoBehaviour
         countdownText.text = "GO !";
         yield return new WaitForSeconds(0.5f);
         countdownText.gameObject.SetActive(false);
-        //GameManager.instance.state = GameManager.GameState.Playing;
         StartCoroutine(LevelManager.instance.AnimateLoadLevel());
     }
 

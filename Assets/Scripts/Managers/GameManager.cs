@@ -1,9 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,6 +26,7 @@ public class GameManager : MonoBehaviour
 
     public void Check(Gear gearToCheck)
     {
+        //if tapped gear exists in answerlist then correct move
         if (AnswerList.Contains(gearToCheck))
         {
             UIManager.instance.UpdateProgressBar();
@@ -37,11 +36,12 @@ public class GameManager : MonoBehaviour
             UIManager.instance.LightGreen();
             Debug.LogWarning("CORRECT !");
         }
+        //if not wrong move
         else
         {
-            Debug.LogError("FAIL !");
+            Debug.LogWarning("FAIL !");
 
-            //unselect
+            //unselect gear
             tappedGear = gearToCheck;
             StartCoroutine(UnselectGear());
 
@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
 
     public void CheckLevelComplete()
     {
+        //if answerlist is empty then all moves have played 
         if (AnswerList.Count == 0)
         {
             state = GameState.Success;
@@ -61,18 +62,22 @@ public class GameManager : MonoBehaviour
 
     public void CalculateCorrectGears()
     {
-        var gearList = GameObject.FindGameObjectsWithTag("Gear");
+        List<GameObject> gearList = LevelManager.instance.gears;
 
-        for (int i = 0; i < gearList.Length; i++)
+        for (int i = 0; i < gearList.Count; i++)
         {
+            //calculate only the spawned unchangable gears
             if (gearList[i].GetComponent<Gear>().changable == false)
             {
+                //if mirror is only horizontal then find gears mirroring their Y value
                 if (LevelManager.instance.mirrorPosX == 0 && LevelManager.instance.mirrorPosY != 0)
                     FindGear(gearList[i].GetComponent<Gear>().X, MirrorOnY(gearList[i].GetComponent<Gear>()));
 
+                //if mirror is only vertical then find gears mirroring their X value
                 else if (LevelManager.instance.mirrorPosX != 0 && LevelManager.instance.mirrorPosY == 0)
                     FindGear(MirrorOnX(gearList[i].GetComponent<Gear>()), gearList[i].GetComponent<Gear>().Y);
 
+                //if mirror is L shaped then find gears mirroring both positions but exclude unreachable gears
                 else
                 {
                     switch (LevelManager.instance.level.LshapePosition)
@@ -117,8 +122,6 @@ public class GameManager : MonoBehaviour
 
                             }
                             break;
-                        default:
-                            break;
                     }
                 }
             }
@@ -127,16 +130,17 @@ public class GameManager : MonoBehaviour
 
     public void FindGear(int x, int y)
     {
-        var gearsList = GameObject.FindGameObjectsWithTag("Gear");
+        List<GameObject> gearsList = LevelManager.instance.gears;
 
-        for (int i = 0; i < gearsList.Length; i++)
+        for (int i = 0; i < gearsList.Count; i++)
         {
+            //find the gear that is not highlighted at the start and add if it doesnt exist in the answer key
             if (gearsList[i].GetComponent<Gear>().X == x && gearsList[i].GetComponent<Gear>().Y == y
                 && gearsList[i].GetComponent<Gear>().highlighted == false)
                 if (!AnswerList.Contains(gearsList[i].GetComponent<Gear>()))
                     AnswerList.Add(gearsList[i].GetComponent<Gear>());
 
-            //L-shape out of reach
+            //L-shape remove out of reach gears from answer key
             if (LevelManager.instance.level.Lshape)
             {
                 switch (LevelManager.instance.level.LshapePosition)
@@ -180,6 +184,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //take the symmetry of the given gear | vertical mirror | x value changes
     public int MirrorOnX(Gear gear)
     {
         int mirrorX = GetXofMirrorOnY(gear.Y);
@@ -187,6 +192,7 @@ public class GameManager : MonoBehaviour
         return newX;
     }
 
+    //take the symmetry of the given gear | horizontal mirror | y value changes
     public int MirrorOnY(Gear gear)
     {
         int mirrorY = GetYofMirrorOnX(gear.X);
@@ -194,11 +200,12 @@ public class GameManager : MonoBehaviour
         return newY;
     }
 
+    //returns the Y position of the mirror located in given X pos
     private int GetYofMirrorOnX(int x)
     {
-        var listMirror = GameObject.FindGameObjectsWithTag("Mirror");
+        List<GameObject> listMirror = LevelManager.instance.mirrors;
 
-        for (int i = 0; i < listMirror.Length; i++)
+        for (int i = 0; i < listMirror.Count; i++)
         {
             if (listMirror[i].GetComponent<Mirror>().X == x)
                 return listMirror[i].GetComponent<Mirror>().Y;
@@ -207,11 +214,12 @@ public class GameManager : MonoBehaviour
         return -1;
     }
 
+    //returns the X position of the mirror located in given Y pos
     private int GetXofMirrorOnY(int y)
     {
-        var listMirror = GameObject.FindGameObjectsWithTag("Mirror");
+        List<GameObject> listMirror = LevelManager.instance.mirrors;
 
-        for (int i = 0; i < listMirror.Length; i++)
+        for (int i = 0; i < listMirror.Count; i++)
         {
             if (listMirror[i].GetComponent<Mirror>().Y == y)
                 return listMirror[i].GetComponent<Mirror>().X;
@@ -222,7 +230,10 @@ public class GameManager : MonoBehaviour
 
     IEnumerator UnselectGear()
     {
+        //unselect only happens if player made error so turn sprite red and white
+        tappedGear.GetComponent<Image>().color = Color.red;
         yield return new WaitForSeconds(UIManager.instance.timeToColor);
+        tappedGear.GetComponent<Image>().color = Color.white;
         tappedGear.Tapped();
     }
 
