@@ -43,19 +43,12 @@ public class UIManager : MonoBehaviour
     private bool isGreenFinished = true;
     private int introWatchedBefore;
 
-    private void Awake()
-    {
-        countdownTime += (int)videoPlayer.clip.length;
-        Invoke("EndReached", (float)videoPlayer.clip.length);
-        introWatchedBefore = PlayerPrefs.GetInt("introWatchedBefore", 0);
-        if (introWatchedBefore == 1)
-            skipButton.SetActive(true);
-    }
-
     // Start is called before the first frame update
     void Start()
     {
         instance = this;
+
+        StartIntro();
 
         StartCoroutine(StartCountdown());
 
@@ -127,6 +120,16 @@ public class UIManager : MonoBehaviour
 
         //make timer in 0:00 format
         time.text = string.Format("{0:00}", timeRemaining);
+    }
+
+    private void StartIntro()
+    {
+        videoPlayer.Play();
+        countdownTime += (int)videoPlayer.clip.length;
+        Invoke("EndReached", (float)videoPlayer.clip.length);
+        introWatchedBefore = PlayerPrefs.GetInt("introWatchedBefore", 0);
+        if (introWatchedBefore == 1)
+            skipButton.SetActive(true);
     }
 
     private void EndReached()

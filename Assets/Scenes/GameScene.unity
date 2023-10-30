@@ -1304,6 +1304,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c170071fdd3dd4f449a43b5c08fa218a, type: 2}
   - {fileID: 11400000, guid: ec20357d63de6ba4595c06024fa5d90d, type: 2}
   - {fileID: 11400000, guid: 2081dffbe9e1275468d6970585017741, type: 2}
+  - {fileID: 11400000, guid: 75bdeb04bc6f1a24d89316e554ceac3c, type: 2}
+  - {fileID: 11400000, guid: f56c25f54ce19c343b2b3c92adb5bca1, type: 2}
+  - {fileID: 11400000, guid: 566490feed644d547bec4e6393f29d9e, type: 2}
+  - {fileID: 11400000, guid: 566490feed644d547bec4e6393f29d9e, type: 2}
+  - {fileID: 11400000, guid: 566490feed644d547bec4e6393f29d9e, type: 2}
+  - {fileID: 11400000, guid: 566490feed644d547bec4e6393f29d9e, type: 2}
   mirrorPosY: 0
   mirrorPosX: 0
   gears: []
@@ -3225,7 +3231,7 @@ VideoPlayer:
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_SkipOnDrop: 1
   m_Looping: 0
   m_WaitForFirstFrame: 1
