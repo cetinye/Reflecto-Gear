@@ -47,6 +47,11 @@ public class Gear : MonoBehaviour, IGear
         StartCoroutine(TurnGreenRoutine());
     }
 
+    public void PlaySound()
+    {
+        this.GetComponent<AudioSource>().Play();
+    }
+
     IEnumerator TurnGreenRoutine()
     {
         this.GetComponent<Image>().color = Color.green;

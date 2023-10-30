@@ -304,7 +304,7 @@ public class LevelManager : MonoBehaviour
             if (!levelParent.transform.GetChild(i).TryGetComponent<Mirror>(out Mirror _mirror))
             {
                 levelParent.transform.GetChild(i).GetComponent<Image>().enabled = true;
-                AudioManager.instance.Play("GearSpawn");
+                levelParent.transform.GetChild(i).GetComponent<Gear>().PlaySound();
                 yield return new WaitForSeconds(gearSpawnTime);
             }
         }
@@ -330,7 +330,7 @@ public class LevelManager : MonoBehaviour
             if (!levelParent.transform.GetChild(i).TryGetComponent<Mirror>(out Mirror _mirror))
             {
                 levelParent.transform.GetChild(i).GetComponent<Image>().enabled = false;
-                AudioManager.instance.Play("GearSpawn");
+                levelParent.transform.GetChild(i).GetComponent<Gear>().PlaySound();
                 yield return new WaitForSeconds(gearSpawnTime);
             }
         }
