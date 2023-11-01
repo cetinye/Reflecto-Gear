@@ -2429,7 +2429,7 @@ MonoBehaviour:
   nextText: {fileID: 1922985383}
   counterIndicator: 0
   countdownTime: 3
-  timeRemaining: 180
+  timeRemaining: 60
   timeToMove: 0.5
   upLid: {fileID: 1620610676}
   downLid: {fileID: 1606958842}

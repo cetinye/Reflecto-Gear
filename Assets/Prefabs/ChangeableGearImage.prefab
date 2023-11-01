@@ -70,7 +70,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2f05173e24720054c9a753f10f5320fc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6226167227afe4a42915c0d69ecf689e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -113,7 +113,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.25
+  m_Radius: 0.14
 --- !u!114 &7886591660298086340
 MonoBehaviour:
   m_ObjectHideFlags: 0
