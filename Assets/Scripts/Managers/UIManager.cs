@@ -32,6 +32,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private VideoPlayer videoPlayer;
     [SerializeField] private GameObject videoOnCanvas;
     [SerializeField] private GameObject skipButton;
+    [SerializeField] private ParticleSystem smokeParticle;
+    [SerializeField] private float smokeEveryXTime;
 
     private float distanceUpLid;
     private float distanceDownLid;
@@ -51,6 +53,8 @@ public class UIManager : MonoBehaviour
         StartIntro();
 
         StartCoroutine(StartCountdown());
+
+        InvokeRepeating("PlaySmoke", 1f, smokeEveryXTime);
 
         newUpPos = upLid.transform.localPosition.y;
         newDownPos = downLid.transform.localPosition.y;
@@ -288,5 +292,11 @@ public class UIManager : MonoBehaviour
         indicatorCircle.GetComponent<Image>().color = Color.white;
         isRedFinished = true;
         isGreenFinished = true;
+    }
+
+    public void PlaySmoke()
+    {
+        smokeParticle.Play();
+        AudioManager.instance.Play("Steam");
     }
 }
