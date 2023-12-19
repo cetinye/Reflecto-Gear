@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
@@ -26,6 +25,13 @@ public class AudioManager : MonoBehaviour
     {
         Sound sound = sounds.Find(sound => sound.name == name);
         sound.source.Play();
+    }
+
+
+    public void PlayOneShot(string name)
+    {
+        Sound sound = sounds.Find(sound => sound.name == name);
+        sound.source.PlayOneShot(sound.clip);
     }
 
     public void Stop(string name)

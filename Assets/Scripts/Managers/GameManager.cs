@@ -23,9 +23,6 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
 
-        UIManager.instance.UpdateLevelNo();
-        UIManager.instance.UpdateBottomGearImage();
-
         state = GameState.Intro;
     }
 
@@ -37,7 +34,7 @@ public class GameManager : MonoBehaviour
             UIManager.instance.UpdateProgressBar();
             gearToCheck.changable = false;
             gearToCheck.TurnGreen();
-            AudioManager.instance.Play("Correct");
+            AudioManager.instance.PlayOneShot("Correct");
             AnswerList.Remove(gearToCheck);
             CheckLevelComplete();
             UIManager.instance.LightGreen();
@@ -51,7 +48,7 @@ public class GameManager : MonoBehaviour
 
             //unselect gear
             tappedGear = gearToCheck;
-            AudioManager.instance.Play("Wrong");
+            AudioManager.instance.PlayOneShot("Wrong");
             StartCoroutine(UnselectGear());
 
             UIManager.instance.LightRed();

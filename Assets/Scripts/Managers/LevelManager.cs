@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Video;
-using static GameManager;
 using Random = UnityEngine.Random;
 
 public class LevelManager : MonoBehaviour
@@ -42,10 +40,6 @@ public class LevelManager : MonoBehaviour
 
         //on default start level index 0
         levelId = PlayerPrefs.GetInt("level", 0);
-
-        ReadLevelData();
-        ChangeGearSprite();
-        GenerateLevel();
     }
 
     private void ReadLevelData()
@@ -160,22 +154,22 @@ public class LevelManager : MonoBehaviour
     {
         for (int i = 0; i < mirrors.Count; i++)
         {
-            if (level.LshapePosition == LshapePosition.TopRight)
+            if (level.LshapePosition == GameManager.LshapePosition.TopRight)
                 if (mirrors[i].GetComponent<Mirror>().X < mirrorPosX ||
                     mirrors[i].GetComponent<Mirror>().Y > mirrorPosY)
                         mirrors[i].GetComponent<Image>().enabled = false;
 
-            if (level.LshapePosition == LshapePosition.TopLeft)
+            if (level.LshapePosition == GameManager.LshapePosition.TopLeft)
                 if (mirrors[i].GetComponent<Mirror>().X > mirrorPosX ||
                     mirrors[i].GetComponent<Mirror>().Y > mirrorPosY)
                         mirrors[i].GetComponent<Image>().enabled = false;
 
-            if (level.LshapePosition == LshapePosition.BottomRight)
+            if (level.LshapePosition == GameManager.LshapePosition.BottomRight)
                 if (mirrors[i].GetComponent<Mirror>().X < mirrorPosX ||
                     mirrors[i].GetComponent<Mirror>().Y < mirrorPosY)
                         mirrors[i].GetComponent<Image>().enabled = false;
 
-            if (level.LshapePosition == LshapePosition.BottomLeft)
+            if (level.LshapePosition == GameManager.LshapePosition.BottomLeft)
                 if (mirrors[i].GetComponent<Mirror>().X > mirrorPosX ||
                     mirrors[i].GetComponent<Mirror>().Y < mirrorPosY)
                         mirrors[i].GetComponent<Image>().enabled = false;
@@ -244,7 +238,7 @@ public class LevelManager : MonoBehaviour
 
     private void DecideLevelIndex()
     {
-        if (GameManager.instance.levelDifState == LevelDifficultyState.Same)
+        if (GameManager.instance.levelDifState == GameManager.LevelDifficultyState.Same)
         {
             GameManager.instance.sameLevelFlag = true;
 
@@ -254,11 +248,11 @@ public class LevelManager : MonoBehaviour
 
             //checking if player played lvlX, X times. If yes load harder level
             if (GameManager.instance.sameLevelFlag && GameManager.instance.counterForHarderLvl == levelId + 1)
-                GameManager.instance.levelDifState = LevelDifficultyState.Harder;
+                GameManager.instance.levelDifState = GameManager.LevelDifficultyState.Harder;
 
             //if made error before and made again this level, load easier
             if (GameManager.instance.levelFailedBefore && GameManager.instance.errorCounter != 0)
-                GameManager.instance.levelDifState = LevelDifficultyState.Easier;
+                GameManager.instance.levelDifState = GameManager.LevelDifficultyState.Easier;
 
             //if made error decrease progress counter
             if (GameManager.instance.errorCounter != 0)
@@ -268,31 +262,42 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if (GameManager.instance.levelDifState == LevelDifficultyState.Harder)
+        if (GameManager.instance.levelDifState == GameManager.LevelDifficultyState.Harder)
         {
             levelId++;
-            if (levelId >= levelList.Count)
-            {
-                levelId = 0;
-            }
+            levelId = Mathf.Clamp(levelId, 0, levelList.Count);
+
             GameManager.instance.sameLevelFlag = false;
             GameManager.instance.levelFailedBefore = false;
             GameManager.instance.counterForHarderLvl = 0;
         }
         
-        else if (GameManager.instance.levelDifState == LevelDifficultyState.Easier)
+        else if (GameManager.instance.levelDifState == GameManager.LevelDifficultyState.Easier)
         {
             levelId--;
-            if (levelId <= 0)
-            {
-                levelId = 0;
-            }
+            levelId = Mathf.Clamp(levelId, 0, levelList.Count);
+
             GameManager.instance.sameLevelFlag = false;
             GameManager.instance.levelFailedBefore = false;
             GameManager.instance.counterForHarderLvl = 0;
         }
 
         PlayerPrefs.SetInt("level", levelId);
+    }
+
+    public IEnumerator StartGame()
+    {
+        ReadLevelData();
+        yield return new WaitForEndOfFrame();
+        ChangeGearSprite();
+        yield return new WaitForEndOfFrame();
+        GenerateLevel();
+        yield return new WaitForEndOfFrame();
+
+        UIManager.instance.UpdateBottomGearImage();
+        UIManager.instance.UpdateLevelNo();
+
+        StartCoroutine(AnimateLoadLevel());
     }
 
     public IEnumerator AnimateLoadLevel()
@@ -304,7 +309,7 @@ public class LevelManager : MonoBehaviour
             if (!levelParent.transform.GetChild(i).TryGetComponent<Mirror>(out Mirror _mirror))
             {
                 levelParent.transform.GetChild(i).GetComponent<Image>().enabled = true;
-                levelParent.transform.GetChild(i).GetComponent<Gear>().PlaySound();
+                AudioManager.instance.PlayOneShot("Spawn");
                 yield return new WaitForSeconds(gearSpawnTime);
             }
         }
@@ -330,7 +335,7 @@ public class LevelManager : MonoBehaviour
             if (!levelParent.transform.GetChild(i).TryGetComponent<Mirror>(out Mirror _mirror))
             {
                 levelParent.transform.GetChild(i).GetComponent<Image>().enabled = false;
-                levelParent.transform.GetChild(i).GetComponent<Gear>().PlaySound();
+                AudioManager.instance.PlayOneShot("Spawn");
                 yield return new WaitForSeconds(gearSpawnTime);
             }
         }
@@ -345,7 +350,7 @@ public class LevelManager : MonoBehaviour
         {
             mirrors[i].SetActive(boolean);
         }
-        AudioManager.instance.Play("MirrorSpawn");
+        AudioManager.instance.PlayOneShot("MirrorSpawn");
         yield return null;
     }
 }

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,7 +24,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Transform downLidOpenPos;
     [SerializeField] private GameObject indicatorCircle;
     [SerializeField] private TextMeshProUGUI levelNo;
-    [SerializeField] private TextMeshProUGUI countdownText;
     [SerializeField] private TextMeshProUGUI time;
     [SerializeField] private Image bottomGearUp;
     [SerializeField] private Image bottomGearDown;
@@ -51,8 +49,6 @@ public class UIManager : MonoBehaviour
         instance = this;
 
         StartIntro();
-
-        StartCoroutine(StartCountdown());
 
         InvokeRepeating("PlaySmoke", 1f, smokeEveryXTime);
 
@@ -126,6 +122,8 @@ public class UIManager : MonoBehaviour
         time.text = string.Format("{0:00}", timeRemaining);
     }
 
+    #region Intro
+
     private void StartIntro()
     {
         videoPlayer.Play();
@@ -145,6 +143,7 @@ public class UIManager : MonoBehaviour
         videoPlayer.Stop();
         GameManager.instance.state = GameManager.GameState.Idle;
         AudioManager.instance.Play("BackgroundMusic");
+        StartCoroutine(LevelManager.instance.StartGame());
     }
 
     public void SkipIntro()
@@ -154,11 +153,11 @@ public class UIManager : MonoBehaviour
         skipButton.SetActive(false);
         videoOnCanvas.SetActive(false);
         GameManager.instance.state = GameManager.GameState.Idle;
-        //update countdown
-        countdownTime = 3;
-        countdownText.text = countdownTime.ToString();
         AudioManager.instance.Play("BackgroundMusic");
+        StartCoroutine(LevelManager.instance.StartGame());
     }
+
+    #endregion
 
     IEnumerator UplidLerp()
     {
@@ -188,21 +187,6 @@ public class UIManager : MonoBehaviour
         }
         downLid.transform.localPosition = new Vector3(downLid.transform.localPosition.x, newDownPos, downLid.transform.localPosition.z);
         DownlidRoutineRunning = false;
-    }
-
-    IEnumerator StartCountdown()
-    {
-        while (countdownTime > 0)
-        {
-            countdownText.text = countdownTime.ToString();
-            yield return new WaitForSeconds(1f);
-            countdownTime--;
-        }
-
-        countdownText.text = "GO !";
-        yield return new WaitForSeconds(0.5f);
-        countdownText.gameObject.SetActive(false);
-        StartCoroutine(LevelManager.instance.AnimateLoadLevel());
     }
 
     public IEnumerator OpenLid()
@@ -297,6 +281,6 @@ public class UIManager : MonoBehaviour
     public void PlaySmoke()
     {
         smokeParticle.Play();
-        AudioManager.instance.Play("Steam");
+        AudioManager.instance.PlayOneShot("Steam");
     }
 }

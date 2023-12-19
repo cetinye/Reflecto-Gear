@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using Image = UnityEngine.UI.Image;
+using UnityEngine.UI;
 
 public class Gear : MonoBehaviour, IGear
 {
@@ -16,7 +16,7 @@ public class Gear : MonoBehaviour, IGear
 
     public void Tapped()
     {
-        Debug.Log("X: " + X  + ", Y: " + Y);
+        //Debug.Log("X: " + X  + ", Y: " + Y);
 
         if (changable) 
         {
@@ -45,11 +45,6 @@ public class Gear : MonoBehaviour, IGear
     public void TurnGreen()
     {
         StartCoroutine(TurnGreenRoutine());
-    }
-
-    public void PlaySound()
-    {
-        this.GetComponent<AudioSource>().Play();
     }
 
     IEnumerator TurnGreenRoutine()

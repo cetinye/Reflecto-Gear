@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RotateGear : MonoBehaviour
@@ -10,12 +8,6 @@ public class RotateGear : MonoBehaviour
     [SerializeField] private GameManager.GameState rotateOnState;
     private bool isLevelGearsPlaying = false;
     private bool isBottomLeftGearsPlaying = false;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
